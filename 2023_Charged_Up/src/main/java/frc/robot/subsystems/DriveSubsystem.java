@@ -1,0 +1,20 @@
+package frc.robot.subsystems;
+
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class DriveSubsystem extends SubsystemBase {
+    
+    public DriveSubsystem() {
+
+    }
+    public void move() {
+
+    }
+    public void arcadeDrive(){
+
+    }
+    @Override 
+    public void periodic(){
+        
+    }
+}
