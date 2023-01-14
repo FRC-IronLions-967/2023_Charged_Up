@@ -1,10 +1,10 @@
-// package frc.robot.utils.controls;
+package frc.robot.Utils.controls;
 
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-// import frc.robot.commands.DoNothingCommand;
+import frc.robot.commands.DoNothingCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -81,11 +81,11 @@ public class XBoxController extends Joystick {
 
     //returns whether the specified button is pressed
     public boolean isButtonPressed(String button) {
-        return buttonMap.get(button).get();
+        return buttonMap.get(button).getAsBoolean();
     }
 
     public boolean isAngleMatched(String povButton) {
-        return povMap.get(povButton).get();
+        return povMap.get(povButton).getAsBoolean();
     }
 
     //these get the value between -1.0 and 1.0 that represent the various joysticks
