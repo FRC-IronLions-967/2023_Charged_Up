@@ -20,7 +20,9 @@ public static IO getInstance() {
 }
 public void teleopInt(){
 
-    manipulatorController.getBu()
+    manipulatorController.whenButtonPressed("A", new DoNothingCommand());
+    
+
 }
 public XBoxController getDriverController(){
     return driverController;
