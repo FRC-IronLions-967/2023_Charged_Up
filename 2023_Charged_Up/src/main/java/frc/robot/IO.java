@@ -11,7 +11,7 @@ public class IO {
 
     private IO() {
         driverController = new XBoxController(0);
-        manipulatorController = new XBoxController(0);
+        manipulatorController = new XBoxController(1);
     }
 public static IO getInstance() {
     if(instance == null) instance = new IO();
@@ -20,7 +20,7 @@ public static IO getInstance() {
 }
 public void teleopInt(){
 
-    manipulatorController.whenButtonPressed("A", new DoNothingCommand());
+    manipulatorController.whenButtonPressed("A", new RunSparkCommand());
     
 
 }
