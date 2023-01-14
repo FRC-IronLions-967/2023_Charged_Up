@@ -20,8 +20,8 @@ public static IO getInstance() {
 }
 public void teleopInt(){
 
-    manipulatorController.whenButtonPressed("A", new RunSparkCommand());
-    
+    manipulatorController.whenButtonPressed("A", new RunSparkCommand(0.25));
+    manipulatorController.whenButtonReleased("A", new RunSparkCommand(0.0));
 
 }
 public XBoxController getDriverController(){
