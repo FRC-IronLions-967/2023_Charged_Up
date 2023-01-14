@@ -1,15 +1,17 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.XboxController;
+
+import frc.robot.Utils.controls.XBoxController;
+import frc.robot.commands.*;
 
 public class IO { 
     private static IO instance; 
-    private XboxController driverController;
-    private XboxController manipulatorController;
+    private XBoxController driverController;
+    private XBoxController manipulatorController;
 
     private IO() {
-        driverController = new XboxController(0);
-        manipulatorController = new XboxController(0);
+        driverController = new XBoxController(0);
+        manipulatorController = new XBoxController(0);
     }
 public static IO getInstance() {
     if(instance == null) instance = new IO();
@@ -18,11 +20,12 @@ public static IO getInstance() {
 }
 public void teleopInt(){
 
+    manipulatorController.getBu()
 }
-public XboxController getDriverController(){
+public XBoxController getDriverController(){
     return driverController;
 }
-public XboxController getManipulatorController(){
+public XBoxController getManipulatorController(){
     return manipulatorController;
 
 }
