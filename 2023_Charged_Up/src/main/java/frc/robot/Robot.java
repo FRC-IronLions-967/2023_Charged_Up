@@ -7,6 +7,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+// import frc.robot.autonomous.*;
+
+import frc.robot.subsystems.*;
+import frc.robot.commands.*;
+// import frc.robot.utils.replayauto.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -19,6 +25,11 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "My Auto";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private SubsystemsInstance subsystemsInst;
+  // private ReplayAuto replayAuto;
+  // private ShootReplayAuto auto;
+  // private RecorderInstance recordInst;
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -29,17 +40,30 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    SmartDashboard.putNumber("maxAccel", 0.02d);
+    SmartDashboard.putNumber("scale", 0.5d);
+    SmartDashboard.putNumber("zeroTurn", 0.5d);
+
+
+
+    subsystemsInst = SubsystemsInstance.getInstance();
+    // recordInst = RecorderInstance.getInstance();
+
+    // auto = new ShootReplayAuto("");
+    ///home/lvuser/recordings/testauto.csv
   }
 
   /**
-   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
-   * that you want ran during disabled, autonomous, teleoperated and test.
+   * This function is called every robot packet, no matter the mode. Use this for items like
+   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
    *
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
+  }
 
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
@@ -56,29 +80,30 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
+    // auto.init();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }
+    // auto.periodic();
+
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    IO.getInstance().teleopInt();
+    // CommandScheduler.getInstance().setDefaultCommand(subsystemsInst.driveSubsystem, new ArcadeDriveCommand());
+    // recordInst.recorder.startTime();
+  }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    // remove this line if you arent recording
+    // recordInst.recorder.recordLine();
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
@@ -95,12 +120,4 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
-
-  /** This function is called once when the robot is first started up. */
-  @Override
-  public void simulationInit() {}
-
-  /** This function is called periodically whilst in simulation. */
-  @Override
-  public void simulationPeriodic() {}
 }
