@@ -10,10 +10,10 @@ public class SubsystemsInstance {
 
     private SubsystemsInstance() {
         driveSubsystem = new DriveSubsystem();
-        runSparkSubsystem = new RunSparkSubsystem();
+        // runSparkSubsystem = new RunSparkSubsystem();
 
         CommandScheduler.getInstance().registerSubsystem(driveSubsystem);
-        CommandScheduler.getInstance().registerSubsystem(runSparkSubsystem);
+        // CommandScheduler.getInstance().registerSubsystem(runSparkSubsystem);
         
 
     }

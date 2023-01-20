@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.IO;
 import frc.robot.Utils.Utils;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -12,6 +13,8 @@ public class DriveSubsystem extends SubsystemBase {
     private CANSparkMax leftFront;
     private CANSparkMax rightBack;
     private CANSparkMax leftBack;
+
+    private IO io;
 
     private double v = 0.0;
     private double r = 0.0;
@@ -32,6 +35,8 @@ public class DriveSubsystem extends SubsystemBase {
         rightBack.setInverted(true);
         leftFront.setInverted(false);
         leftBack.setInverted(false);
+
+        io = IO.getInstance();
 
     }
     public void move(double r, double l) {
@@ -61,15 +66,21 @@ public class DriveSubsystem extends SubsystemBase {
             ? SmartDashboard.getNumber("scale", 0.5d) * x * SmartDashboard.getNumber("zeroTurn", 0.3d)
             : SmartDashboard.getNumber("scale", 0.5d) * x * Math.abs(v);
 
-            double l = v - s;
-            double r = v + s;
+            double l = v + s;
+            double r = v - s;
 
             move(r, l);
 
     }
     @Override 
     public void periodic(){
-
+        double driveScaling = 1.0;
+        if (io.getDriverController().getRightTrigger() > 0.5 && io.getDriverController().getLeftTrigger() > 0.5) {
+            driveScaling = 0.5;
+        }
+        double y = -driveScaling * io.getDriverController().getLeftStickY();
+        double x = driveScaling * io.getDriverController().getRightStickX();
+        arcadeDrive(x, y);
     }
 
 }

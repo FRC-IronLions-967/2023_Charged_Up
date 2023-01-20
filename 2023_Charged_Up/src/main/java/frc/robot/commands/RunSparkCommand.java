@@ -13,7 +13,7 @@ public class RunSparkCommand extends CommandBase {
     this.speed = speed;
 
     inst = SubsystemsInstance.getInstance();
-    addRequirements(inst.runSparkSubsystem);
+    // addRequirements(inst.runSparkSubsystem);
 
   }
 
