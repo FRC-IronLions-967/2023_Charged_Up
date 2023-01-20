@@ -11,7 +11,7 @@ public class RunSparkCommand extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
 
     inst = SubsystemsInstance.getInstance();
-    addRequirements(inst.runSparkSubsystem);
+    // addRequirements(inst.runSparkSubsystem);
 
   }
 
