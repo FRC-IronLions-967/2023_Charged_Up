@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-// import frc.robot.autonomous.*;
+import frc.robot.auto.*;
 
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
-// import frc.robot.utils.replayauto.*;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -23,10 +23,10 @@ import frc.robot.commands.*;
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
+  private String autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private SubsystemsInstance subsystemsInst;
-
+  private Autonomous auto;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -70,17 +70,17 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
-    // auto.init();
+    autoSelected = m_chooser.getSelected();
+    autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+    System.out.println("Auto selected: " + autoSelected);
+    auto = new Autonomous();
+    auto.init();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    // auto.periodic();
-
+    auto.periodic();
   }
 
   /** This function is called once when teleop is enabled. */
