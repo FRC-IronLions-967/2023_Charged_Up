@@ -26,9 +26,6 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private SubsystemsInstance subsystemsInst;
-  // private ReplayAuto replayAuto;
-  // private ShootReplayAuto auto;
-  // private RecorderInstance recordInst;
 
 
   /**
@@ -47,10 +44,6 @@ public class Robot extends TimedRobot {
 
 
     subsystemsInst = SubsystemsInstance.getInstance();
-    // recordInst = RecorderInstance.getInstance();
-
-    // auto = new ShootReplayAuto("");
-    ///home/lvuser/recordings/testauto.csv
   }
 
   /**
@@ -78,7 +71,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+    m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
     // auto.init();
   }
@@ -94,15 +87,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     IO.getInstance().teleopInt();
-    // CommandScheduler.getInstance().setDefaultCommand(subsystemsInst.driveSubsystem, new ArcadeDriveCommand());
-    // recordInst.recorder.startTime();
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    // remove this line if you arent recording
-    // recordInst.recorder.recordLine();
   }
 
   /** This function is called once when the robot is disabled. */
