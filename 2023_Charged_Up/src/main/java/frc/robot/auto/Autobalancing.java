@@ -2,21 +2,26 @@ package frc.robot.auto;
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.IO;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.SubsystemsInstance;
 
-public class Autobalancing implements AutonomousInterface {
+public class Autobalancing extends CommandBase {
     
     private boolean autoBalanceXMode;
     private boolean autoBalanceYMode;
     
     private AHRS ahrs;
 
+    private SubsystemsInstance inst;
     private IO io;
 
     private static final double kOffBalanceAngleThresholdDegrees = 10;
     private static final double kOonBalanceAngleThresholdDegrees  = 5;
 
     public Autobalancing(){
-        ahrs = new AHRS(SPI.Port.kMXP); 
+        ahrs = new AHRS(SPI.Port.kMXP);
+        inst = SubsystemsInstance.getInstance(); 
+        addRequirements(inst.driveSubsystem);
     }
 
     public void operatorControl() {
@@ -60,20 +65,11 @@ public class Autobalancing implements AutonomousInterface {
                 double rollAngleRadians = rollAngleDegrees * (Math.PI / 180.0);
                 yAxisRate = Math.sin(rollAngleRadians) * -1;
             }
+            inst.driveSubsystem.move(xAxisRate, yAxisRate);
         }
+
+
     // }
-
-    @Override
-    public void init() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void periodic() {
-        // TODO Auto-generated method stub
-        
-    }
 
 }
 
