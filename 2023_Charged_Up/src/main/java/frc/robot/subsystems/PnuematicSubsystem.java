@@ -45,6 +45,10 @@ public class PnuematicSubsystem extends SubsystemBase {
         DoublePCM.set(kReverse);
     }
 
+    public void toggle(){
+        System.out.println("Pnuematics toggled");
+    }
+
     @Override
     public void periodic() {
     }

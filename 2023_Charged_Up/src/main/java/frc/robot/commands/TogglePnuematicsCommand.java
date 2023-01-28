@@ -1,21 +1,20 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SubsystemsInstance;
 
 public class TogglePnuematicsCommand extends CommandBase {
   
-  private SubsystemsInstance inst;
-  Boolean doubleDino;
 
-  doubleDino.set(kReverse);
+  private SubsystemsInstance inst;
+  
 
   public TogglePnuematicsCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
 
+
     inst = SubsystemsInstance.getInstance();
-    // addRequiresments(inst.runSparkSubsystem);
+    // addRequirements(inst.runSparkCommand);
 
   }
 
@@ -27,7 +26,7 @@ public class TogglePnuematicsCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    inst.TogglePnuematicsCommand.toggle();
+    inst.pnuematicSubsystem.toggle();
 
   }
 
