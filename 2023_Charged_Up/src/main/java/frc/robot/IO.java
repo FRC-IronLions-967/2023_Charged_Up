@@ -1,7 +1,6 @@
 package frc.robot;
 
 
-import edu.wpi.first.wpilibj.XboxController.Button;
 import frc.robot.Utils.controls.XBoxController;
 import frc.robot.commands.*;
 
@@ -23,8 +22,6 @@ public void teleopInt(){
 
     manipulatorController.whenButtonPressed("A", new RunSparkCommand(0.25));
     manipulatorController.whenButtonReleased("A", new RunSparkCommand(0.0));
-
-    manipulatorController.whenButtonPressed("Y", new TogglePnuematicsCommand());
 
 }
 public XBoxController getDriverController(){

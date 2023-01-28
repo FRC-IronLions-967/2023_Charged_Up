@@ -1,20 +1,20 @@
 package frc.robot.commands;
 
-
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SubsystemsInstance;
 
 public class TogglePnuematicsCommand extends CommandBase {
   
+  private double speed;
   private SubsystemsInstance inst;
   
 
   public TogglePnuematicsCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
 
+
     inst = SubsystemsInstance.getInstance();
-    // addRequiresments(inst.runSparkSubsystem);
+    // addRequirements(inst.runSparkCommand);
 
   }
 
