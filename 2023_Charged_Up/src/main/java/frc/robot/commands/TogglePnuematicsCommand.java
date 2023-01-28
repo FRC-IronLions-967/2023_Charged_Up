@@ -5,7 +5,7 @@ import frc.robot.subsystems.SubsystemsInstance;
 
 public class TogglePnuematicsCommand extends CommandBase {
   
-  private double speed;
+
   private SubsystemsInstance inst;
   
 

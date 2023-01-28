@@ -46,7 +46,7 @@ public class PnuematicSubsystem extends SubsystemBase {
     }
 
     public void toggle(){
-        System.out.println("Pnuematics toggled")
+        System.out.println("Pnuematics toggled");
     }
 
     @Override
