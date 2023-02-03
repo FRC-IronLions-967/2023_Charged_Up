@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.SPI;
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -23,6 +25,14 @@ public class DriveSubsystem extends SubsystemBase {
     private final double MAX = 1.0;
 
 
+    private boolean autoBalanceXMode;
+    private boolean autoBalanceYMode;
+    
+    private AHRS ahrs;
+
+    private static final double kOffBalanceAngleThresholdDegrees = 10;
+    private static final double kOonBalanceAngleThresholdDegrees  = 5;
+
     public DriveSubsystem() {
         rightFront = new CANSparkMax(1, MotorType.kBrushless);
         leftFront = new CANSparkMax(2, MotorType.kBrushless);
@@ -38,6 +48,8 @@ public class DriveSubsystem extends SubsystemBase {
 
         io = IO.getInstance();
 
+        System.out.println("Constructor ran");
+        ahrs = new AHRS(SPI.Port.kMXP);
     }
     public void move(double r, double l) {
         r = (r > MAX) ? MAX : r;
@@ -72,6 +84,53 @@ public class DriveSubsystem extends SubsystemBase {
             move(r, l);
 
     }
+
+    public void operatorControl() {
+        // while (operatorControl() /*&& isEnabled() add this for pid controller */) {
+            System.out.println(true);
+            double xAxisRate            = io.getDriverController().getRightStickX();
+            double yAxisRate            = io.getDriverController().getLeftStickY();
+            double pitchAngleDegrees    = ahrs.getPitch();
+            double rollAngleDegrees     = ahrs.getRoll();
+
+            if ( !autoBalanceXMode && 
+                 (Math.abs(pitchAngleDegrees) >= 
+                  Math.abs(kOffBalanceAngleThresholdDegrees))) {
+                autoBalanceXMode = true;
+            }
+            else if ( autoBalanceXMode && 
+                      (Math.abs(pitchAngleDegrees) <= 
+                       Math.abs(kOonBalanceAngleThresholdDegrees))) {
+                autoBalanceXMode = false;
+            }
+            if ( !autoBalanceYMode && 
+                 (Math.abs(pitchAngleDegrees) >= 
+                  Math.abs(kOffBalanceAngleThresholdDegrees))) {
+                autoBalanceYMode = true;
+            }
+            else if ( autoBalanceYMode && 
+                      (Math.abs(pitchAngleDegrees) <= 
+                       Math.abs(kOonBalanceAngleThresholdDegrees))) {
+                autoBalanceYMode = false;
+            }
+
+            // Control drive system automatically, 
+            // driving in reverse direction of pitch/roll angle,
+            // with a magnitude based upon the angle
+
+            if ( autoBalanceXMode ) {
+                double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
+                xAxisRate = Math.sin(pitchAngleRadians) * -1;
+            }
+            if ( autoBalanceYMode ) {
+                double rollAngleRadians = rollAngleDegrees * (Math.PI / 180.0);
+                yAxisRate = Math.sin(rollAngleRadians) * -1;
+            }
+            move(xAxisRate, yAxisRate);
+            System.out.println("Autobalancing is being ran");
+        }
+
+
     @Override 
     public void periodic(){
         double driveScaling = 1.0;
@@ -82,5 +141,4 @@ public class DriveSubsystem extends SubsystemBase {
         double x = driveScaling * io.getDriverController().getRightStickX();
         arcadeDrive(x, y);
     }
-
 }

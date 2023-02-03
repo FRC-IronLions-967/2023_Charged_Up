@@ -22,6 +22,8 @@ public void teleopInt(){
 
     manipulatorController.whenButtonPressed("A", new RunSparkCommand(0.25));
     manipulatorController.whenButtonReleased("A", new RunSparkCommand(0.0));
+    manipulatorController.whenButtonPressed("START", new RunAutobalancingCommand());
+    manipulatorController.whenButtonReleased("START", new RunAutobalancingCommand());
 
 }
 public XBoxController getDriverController(){
