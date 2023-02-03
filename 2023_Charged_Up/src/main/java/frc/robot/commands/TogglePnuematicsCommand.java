@@ -7,11 +7,11 @@ public class TogglePnuematicsCommand extends CommandBase {
   
 
   private SubsystemsInstance inst;
-  
+  private int toggleCompressor;
 
-  public TogglePnuematicsCommand() {
+  public RunPnuematicsCommand(Integer toggleCompressor) {
     // Use addRequirements() here to declare subsystem dependencies.
-
+    this.toggleCompressor = toggleCompressor;
 
     inst = SubsystemsInstance.getInstance();
     // addRequirements(inst.runSparkCommand);
@@ -26,7 +26,7 @@ public class TogglePnuematicsCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    inst.pnuematicSubsystem.toggle();
+    inst.pnuematicSubsystem.toggleCompressor(toggleCompressor);
 
   }
 

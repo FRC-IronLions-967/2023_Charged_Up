@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -11,12 +10,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class PnuematicSubsystem extends SubsystemBase {
 
     private Compressor pcmCompressor;
-    private Compressor phCompressor;
-    private boolean enabled;
-    private boolean pressureSwitch;
-    private double current;
-    private DoubleSolenoid DoublePCM;
-    private DoubleSolenoid DoublePH;
+    // private boolean enabled;
+    // private boolean pressureSwitch;
+    // private double current;
+    private DoubleSolenoid doublePCM;
+
     
 
     public Value kOff;
@@ -27,27 +25,34 @@ public class PnuematicSubsystem extends SubsystemBase {
 
     public PnuematicSubsystem() {
         pcmCompressor  = new Compressor(0, PneumaticsModuleType.CTREPCM);
-        phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
 
-        pcmCompressor.enableDigital();
+        doublePCM = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+        
         pcmCompressor.disable();
-
-        enabled = pcmCompressor.isEnabled();
-        pressureSwitch = pcmCompressor.getPressureSwitchValue();
-        current = pcmCompressor.getCurrent();
-
-        DoublePCM = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 2);
-        DoublePH = new DoubleSolenoid(9, PneumaticsModuleType.REVPH, 4, 5);
-
-
-        DoublePCM.set(kOff);
-        DoublePCM.set(kForward);
-        DoublePCM.set(kReverse);
+        // DoublePCM.set(kOff);
+        // DoublePCM.set(kForward);
+        // DoublePCM.set(kReverse);
     }
 
-    public void toggle(){
-        System.out.println("Pnuematics toggled");
+    public void toggleSolenoid(Integer toggleSolenoid){
+        if(toggleSolenoid == 0){
+            doublePCM.set(kForward);
+        } else if(toggleSolenoid == 1){
+            doublePCM.set(kReverse);
+        }else if(toggleSolenoid == 2){
+            doublePCM.set(kOff);
+        }
+        doublePCM.toggle();
     }
+
+    public void toggleCompressor(Integer toggleCompressor){
+        if(toggleCompressor == 1){
+            pcmCompressor.isEnabled();
+        }else if(toggleCompressor == 0){
+            pcmCompressor.disable();
+        }
+    }
+    
 
     @Override
     public void periodic() {
