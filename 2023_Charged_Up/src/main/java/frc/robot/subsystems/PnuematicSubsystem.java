@@ -17,18 +17,22 @@ public class PnuematicSubsystem extends SubsystemBase {
 
     
 
-    public Value kOff;
-    public Value kForward;
-    public Value kReverse;
+    private Value kOff;
+    private Value kForward;
+    private Value kReverse;
 
 
 
     public PnuematicSubsystem() {
-        pcmCompressor  = new Compressor(0, PneumaticsModuleType.CTREPCM);
+        pcmCompressor  = new Compressor(1, PneumaticsModuleType.CTREPCM);
 
         doublePCM = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
         
-        pcmCompressor.disable();
+        
+
+        // doublePCM.set(kForward);
+        // doublePCM.toggle();
+        // pcmCompressor.enable();
         // DoublePCM.set(kOff);
         // DoublePCM.set(kForward);
         // DoublePCM.set(kReverse);
@@ -46,15 +50,22 @@ public class PnuematicSubsystem extends SubsystemBase {
     }
 
     public void toggleCompressor(Integer toggleCompressor){
-        if(toggleCompressor == 1){
-            pcmCompressor.isEnabled();
-        }else if(toggleCompressor == 0){
-            pcmCompressor.disable();
-        }
+        
+        System.out.println(true);
+        // if(toggleCompressor == 1){
+        //     pcmCompressor.isEnabled();
+        // }else if(toggleCompressor == 0){
+        //     pcmCompressor.disable();
+        // }
     }
     
 
     @Override
     public void periodic() {
+        
+
+
+
     }
+
 }
