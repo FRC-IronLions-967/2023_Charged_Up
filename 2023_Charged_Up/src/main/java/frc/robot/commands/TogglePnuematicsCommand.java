@@ -1,44 +1,44 @@
-// package frc.robot.commands;
+package frc.robot.commands;
 
-// import edu.wpi.first.wpilibj2.command.CommandBase;
-// import frc.robot.subsystems.SubsystemsInstance;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.SubsystemsInstance;
 
-// public class TogglePnuematicsCommand extends CommandBase {
+public class TogglePnuematicsCommand extends CommandBase {
   
 
-//   private SubsystemsInstance inst;
-//   private int toggleCompressor;
+  private SubsystemsInstance inst;
+  private int toggleSolenoid;
 
-//   public TogglePnuematicsCommand(Integer toggleCompressor) {
-//     // Use addRequirements() here to declare subsystem dependencies.
-//     this.toggleCompressor = toggleCompressor;
+  public TogglePnuematicsCommand(Integer toggleSolenoid) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    this.toggleSolenoid = toggleSolenoid;
 
-//     inst = SubsystemsInstance.getInstance();
-//     // addRequirements(inst.runSparkCommand);
+    inst = SubsystemsInstance.getInstance();
+    // addRequirements(inst.runSparkCommand);
 
-//   }
+  }
 
-//   // Called when the command is initially scheduled.
-//   @Override
-//   public void initialize() {
-//   }
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+  }
 
-//   // Called every time the scheduler runs while the command is scheduled.
-//   @Override
-//   public void execute() {
-//     inst.pnuematicSubsystem.toggleCompressor(toggleCompressor);
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+    inst.pnuematicSubsystem.toggleSolenoid(toggleSolenoid);
 
-//   }
+  }
 
 
-//   // Called once the command ends or is interrupted.
-//   @Override
-//   public void end(boolean interrupted) {
-//   }
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+  }
 
-//   // Returns true when the command should end.
-//   @Override
-//   public boolean isFinished() {
-//     return true;
-//   }
-// }
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    return true;
+  }
+}
