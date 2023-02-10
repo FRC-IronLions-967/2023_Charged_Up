@@ -7,11 +7,11 @@ public class MoveClawCommand extends CommandBase {
   
 
   private SubsystemsInstance inst;
-  private boolean toggleSolenoid;
+  private boolean direction;
 
   public MoveClawCommand (boolean direction) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.toggleSolenoid = direction;
+    this.direction = direction;
 
     inst = SubsystemsInstance.getInstance();
     // addRequirements(inst.runSparkCommand);
@@ -26,7 +26,7 @@ public class MoveClawCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    inst.pnuematicSubsystem.toggleSolenoid(toggleSolenoid);
+    inst.pnuematicSubsystem.toggleClaw(direction);
 
   }
 

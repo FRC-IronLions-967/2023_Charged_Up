@@ -9,7 +9,7 @@ public class MoveArmCommand extends CommandBase {
   private SubsystemsInstance inst;
   private boolean direction;
 
-  public MoveClawCommand (boolean direction) {
+  public MoveArmCommand (boolean direction) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.direction = direction;
 
@@ -26,7 +26,7 @@ public class MoveArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    inst.pnuematicSubsystem.toggleClaw(direction);
+    inst.pnuematicSubsystem.toggleArm(direction);
 
   }
 

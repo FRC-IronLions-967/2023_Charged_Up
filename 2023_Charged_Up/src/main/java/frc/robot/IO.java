@@ -19,8 +19,8 @@ public static IO getInstance() {
     return instance;
 }
 public void teleopInt(){
-    manipulatorController.whenButtonPressed("X", new TogglePnuematicsCommand(true));
-    manipulatorController.whenButtonPressed("A", new TogglePnuematicsCommand(false));
+    manipulatorController.whenButtonPressed("X", new MoveClawCommand(true));
+    manipulatorController.whenButtonPressed("A", new MoveClawCommand(false));
 }
 public XBoxController getDriverController(){
     return driverController;
