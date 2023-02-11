@@ -5,59 +5,55 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
+import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.*;
 
-// import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-// import edu.wpi.first.wpilibj.Compressor;
-// import edu.wpi.first.wpilibj.DoubleSolenoid;
-// import edu.wpi.first.wpilibj.PneumaticsModuleType;
-// import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-// import edu.wpi.first.wpilibj2.command.SubsystemBase;
+public class PnuematicSubsystem extends SubsystemBase {
 
-// public class PnuematicSubsystem extends SubsystemBase {
+    private Compressor pcmCompressor;
+    private DoubleSolenoid clawSol;
+    private DoubleSolenoid armSol_1;
+    //private DoubleSolenoid armSol_2;
 
-//     private Compressor pcmCompressor;
-//     private Compressor phCompressor;
-//     private boolean enabled;
-//     private boolean pressureSwitch;
-//     private double current;
-//     private DoubleSolenoid DoublePCM;
-//     private DoubleSolenoid DoublePH;
     
 
-//     public Value kOff;
-//     public Value kForward;
-//     public Value kReverse;
+    public PnuematicSubsystem() {
+        try{
+            pcmCompressor  = new Compressor(1, PneumaticsModuleType.CTREPCM);
 
+            clawSol = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, 2, 3);
+            armSol_1 = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, 0, 1);
+            //armSol_2 = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, 1, 6);
+        
+        } catch(Exception e) {
+            System.out.println("Unable to created DoubleSolenoid");
+        }
+    }
 
+    public void toggleClaw(boolean direction){
+        if(direction){
+            clawSol.set(kForward);
+        } else {
+            clawSol.set(kReverse);
+        }
+    }
 
-//     public PnuematicSubsystem() {
-//         pcmCompressor  = new Compressor(0, PneumaticsModuleType.CTREPCM);
-//         phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
+    public void toggleArm(boolean direction){
+        if(direction){
+           armSol_1.set(kForward);
+           //armSol_2.set(kForward);
+        } else {
+            armSol_1.set(kReverse);
+            //armSol_2.set(kReverse);
+        }
+    }
+   
+    //hello!
 
-//         pcmCompressor.enableDigital();
-//         pcmCompressor.disable();
-
-//         enabled = pcmCompressor.isEnabled();
-//         pressureSwitch = pcmCompressor.getPressureSwitchValue();
-//         current = pcmCompressor.getCurrent();
-
-//         DoublePCM = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 2);
-//         DoublePH = new DoubleSolenoid(9, PneumaticsModuleType.REVPH, 4, 5);
-
-
-//         DoublePCM.set(kOff);
-//         DoublePCM.set(kForward);
-//         DoublePCM.set(kReverse);
-
-//         current = phCompressor.getPressure();
-//     }
-
-//     public void toggle(){
-//         System.out.println("Pnuematics toggled");
-//     }
-
-//     @Override
-//     public void periodic() {
-//     }
-// }
+    @Override
+    public void periodic() {
+        //System.out.println(doubleSol.get());
+        //System.out.println(doubleSol.isRevSolenoidDisabled());
+    }
+}

@@ -3,12 +3,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class RunSparkCommand extends CommandBase {
+public class LeadScrewCommand extends CommandBase {
   
   private double speed;
   private SubsystemsInstance inst;
 
-  public RunSparkCommand(double speed) {
+  public LeadScrewCommand(double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.speed = speed;
 
