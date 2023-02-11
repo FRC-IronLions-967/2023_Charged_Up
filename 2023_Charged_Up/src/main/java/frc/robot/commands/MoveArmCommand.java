@@ -3,17 +3,18 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class RunSparkCommand extends CommandBase {
+public class MoveArmCommand extends CommandBase {
   
-  private double speed;
-  private SubsystemsInstance inst;
 
-  public RunSparkCommand(double speed) {
+  private SubsystemsInstance inst;
+  private boolean direction;
+
+  public MoveArmCommand (boolean direction) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.speed = speed;
+    this.direction = direction;
 
     inst = SubsystemsInstance.getInstance();
-    // addRequirements(inst.runSparkSubsystem);
+    // addRequirements(inst.runSparkCommand);
 
   }
 
@@ -25,7 +26,7 @@ public class RunSparkCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    inst.runSparkSubsystem.runMotor(speed);
+    inst.pnuematicSubsystem.toggleArm(direction);
 
   }
 
