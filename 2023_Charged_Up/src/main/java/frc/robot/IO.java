@@ -20,9 +20,9 @@ public static IO getInstance() {
 }
 public void teleopInt(){
 
-    manipulatorController.whenButtonPressed("A", new RunSparkCommand(0.25));
+    manipulatorController.whenButtonPressed("A", new RunSparkCommand(1.0));
     manipulatorController.whenButtonReleased("A", new RunSparkCommand(0.0));
-    manipulatorController.whenButtonPressed("X", new RunSparkCommand(-0.25));
+    manipulatorController.whenButtonPressed("X", new RunSparkCommand(-1.0));
     manipulatorController.whenButtonReleased("X", new RunSparkCommand(0.0));
 
 }
