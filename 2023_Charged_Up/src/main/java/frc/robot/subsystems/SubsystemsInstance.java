@@ -4,14 +4,14 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class SubsystemsInstance {
     public DriveSubsystem driveSubsystem;
-    public RunSparkSubsystem runSparkSubsystem;
+    public LeadScrewSubsystem runSparkSubsystem;
     // public PnuematicSubsystem pnuematicSubsystem;
 
     private static SubsystemsInstance inst;
 
     private SubsystemsInstance() {
         driveSubsystem = new DriveSubsystem();
-        runSparkSubsystem = new RunSparkSubsystem();
+        runSparkSubsystem = new LeadScrewSubsystem();
         // pnuematicSubsystem = new PnuematicSubsystem();
 
         CommandScheduler.getInstance().registerSubsystem(driveSubsystem);

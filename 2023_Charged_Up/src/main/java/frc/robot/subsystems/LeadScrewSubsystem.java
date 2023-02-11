@@ -5,19 +5,19 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class RunSparkSubsystem extends SubsystemBase {
+public class LeadScrewSubsystem extends SubsystemBase {
     
-    private CANSparkMax practiceMotor;
+    private CANSparkMax leadScrew;
 
-    public RunSparkSubsystem() {
-        practiceMotor = new CANSparkMax(5, MotorType.kBrushless);
+    public LeadScrewSubsystem() {
+        leadScrew = new CANSparkMax(5, MotorType.kBrushless);
 
-        practiceMotor.setInverted(true);
+        leadScrew.setInverted(true);
 
     }
 
     public void runMotor(double speed) {
-        practiceMotor.set(speed);
+        leadScrew.set(speed);
     }
 
 
