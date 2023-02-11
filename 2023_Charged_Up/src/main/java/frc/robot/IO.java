@@ -19,10 +19,15 @@ public static IO getInstance() {
     return instance;
 }
 public void teleopInt(){
-    manipulatorController.whenButtonPressed("Y", new MoveArmCommand(true));
-    manipulatorController.whenButtonPressed("B", new MoveArmCommand(false));
-    manipulatorController.whenButtonPressed("X", new MoveClawCommand(true));
-    manipulatorController.whenButtonReleased("X", new MoveClawCommand(false));
+    manipulatorController.whenButtonPressed("A", new RunSparkCommand(1.0));
+    manipulatorController.whenButtonReleased("A", new RunSparkCommand(0.0));
+    manipulatorController.whenButtonPressed("X", new RunSparkCommand(-1.0));
+    manipulatorController.whenButtonReleased("X", new RunSparkCommand(0.0));
+
+    manipulatorController.whenButtonPressed("LBUMP", new MoveArmCommand(true));
+    manipulatorController.whenButtonPressed("RBUMP", new MoveArmCommand(false));
+    manipulatorController.whenButtonPressed("B", new MoveClawCommand(true));
+    manipulatorController.whenButtonReleased("B", new MoveClawCommand(false));
 }
 public XBoxController getDriverController(){
     return driverController;
