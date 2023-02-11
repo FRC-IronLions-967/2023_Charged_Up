@@ -15,7 +15,7 @@ public class PnuematicSubsystem extends SubsystemBase {
     private Compressor pcmCompressor;
     private DoubleSolenoid clawSol;
     private DoubleSolenoid armSol_1;
-    private DoubleSolenoid armSol_2;
+    //private DoubleSolenoid armSol_2;
 
     
 
@@ -23,9 +23,9 @@ public class PnuematicSubsystem extends SubsystemBase {
         try{
             pcmCompressor  = new Compressor(1, PneumaticsModuleType.CTREPCM);
 
-            clawSol = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, 3, 4);
-            armSol_1 = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, 2, 5);
-            armSol_2 = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, 1, 6);
+            clawSol = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, 2, 3);
+            armSol_1 = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, 0, 1);
+            //armSol_2 = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, 1, 6);
         
         } catch(Exception e) {
             System.out.println("Unable to created DoubleSolenoid");
@@ -43,10 +43,10 @@ public class PnuematicSubsystem extends SubsystemBase {
     public void toggleArm(boolean direction){
         if(direction){
            armSol_1.set(kForward);
-           armSol_2.set(kForward);
+           //armSol_2.set(kForward);
         } else {
             armSol_1.set(kReverse);
-            armSol_2.set(kReverse);
+            //armSol_2.set(kReverse);
         }
     }
    

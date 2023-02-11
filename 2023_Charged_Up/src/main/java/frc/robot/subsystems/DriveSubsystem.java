@@ -24,10 +24,10 @@ public class DriveSubsystem extends SubsystemBase {
 
 
     public DriveSubsystem() {
-        rightFront = new CANSparkMax(2, MotorType.kBrushless);
-        leftFront = new CANSparkMax(3, MotorType.kBrushless);
-        rightBack = new CANSparkMax(4, MotorType.kBrushless);
-        leftBack = new CANSparkMax(5, MotorType.kBrushless);
+        rightFront = new CANSparkMax(1, MotorType.kBrushless);
+        leftFront = new CANSparkMax(4, MotorType.kBrushless);
+        rightBack = new CANSparkMax(2, MotorType.kBrushless);
+        leftBack = new CANSparkMax(3, MotorType.kBrushless);
 
         rightBack.follow(rightFront);
         leftBack.follow(leftFront);
