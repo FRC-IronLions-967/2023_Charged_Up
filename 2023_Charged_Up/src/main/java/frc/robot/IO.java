@@ -1,7 +1,5 @@
 package frc.robot;
 
-
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Utils.controls.XBoxController;
 import frc.robot.commands.*;
 
@@ -29,12 +27,6 @@ public void teleopInt(){
     manipulatorController.whenPOVButtonPressed("N", new MoveArmToPlaceHighCommand());
     manipulatorController.whenPOVButtonPressed("E", new MoveArmToPlaceMiddleCommand());
     manipulatorController.whenPOVButtonPressed("S", new MoveArmToPlaceLowCommand());
-
-    if (manipulatorController.getLeftTrigger() > 0.1) {
-        CommandScheduler.getInstance().schedule(new LeadScrewAdjustCommand(manipulatorController.getLeftTrigger()));
-    } else if (manipulatorController.getRightTrigger() > 0.1) {
-        CommandScheduler.getInstance().schedule(new LeadScrewAdjustCommand(-manipulatorController.getRightTrigger())); 
-    } 
 
 }
 public XBoxController getDriverController(){

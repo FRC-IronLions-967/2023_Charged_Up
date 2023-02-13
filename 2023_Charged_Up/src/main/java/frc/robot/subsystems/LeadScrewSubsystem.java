@@ -10,7 +10,9 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.IO;
+import frc.robot.commands.LeadScrewAdjustCommand;
 import frc.robot.commands.LeadScrewInitializeCommand;
+import frc.robot.commands.LeadScrewStopCommand;
 
 public class LeadScrewSubsystem extends SubsystemBase {
 
@@ -30,6 +32,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
     private double leadScrewGearboxRatio = 9.0; //modify as hardware changes, current ratio is 9:1
 
     private static double leadScrewTargetPosition;
+    private double leadScrewManualDeadband = 0.1;
 
     public LeadScrewSubsystem() {
         leadScrew = new CANSparkMax(5, MotorType.kBrushless);
@@ -96,7 +99,6 @@ public class LeadScrewSubsystem extends SubsystemBase {
     public void stopLeadScrew() {
         leadScrewController.setReference(leadScrew.getEncoder().getPosition(), ControlType.kPosition);
         leadScrewController.setPositionPIDWrappingEnabled(true);
-        
     }
 
     public boolean isLeadScrewFinished() {
@@ -125,13 +127,21 @@ public class LeadScrewSubsystem extends SubsystemBase {
                 CommandScheduler.getInstance().schedule(new LeadScrewInitializeCommand());
                 break;
             case MANUAL:
-                if (io.getManipulatorController().getLeftTrigger() <= 0.1 &&
-                        io.getManipulatorController().getRightTrigger() <= 0.1) {
-                    stopLeadScrew();
+                if (io.getManipulatorController().getLeftTrigger() > leadScrewManualDeadband ||
+                        io.getManipulatorController().getRightTrigger() > leadScrewManualDeadband) {
+                    CommandScheduler.getInstance().schedule(new LeadScrewAdjustCommand(
+                        io.getManipulatorController().getLeftTrigger() - io.getManipulatorController().getRightTrigger()));
+                } else {
+                    CommandScheduler.getInstance().schedule(new LeadScrewStopCommand());
                     state = LeadScrewStates.AUTO;
                 }
                 break;
             case AUTO:
+                if (io.getManipulatorController().getLeftTrigger() > leadScrewManualDeadband ||
+                        io.getManipulatorController().getRightTrigger() > leadScrewManualDeadband) {
+                    CommandScheduler.getInstance().schedule(new LeadScrewStopCommand());
+                    state = LeadScrewStates.MANUAL;
+                }   
                 break;
         }
     }
