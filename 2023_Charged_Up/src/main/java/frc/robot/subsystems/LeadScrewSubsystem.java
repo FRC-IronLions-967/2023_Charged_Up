@@ -31,7 +31,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
     private double leadScrewRevPerInch = mmPerInch / leadScrewPitch; //3.175 revolution for 1 inch approx.
     private double leadScrewGearboxRatio = 9.0; //modify as hardware changes, current ratio is 9:1
 
-    private static double leadScrewTargetPosition;
+    private double leadScrewTargetPosition;
     private double leadScrewManualDeadband = 0.1;
 
     public LeadScrewSubsystem() {
