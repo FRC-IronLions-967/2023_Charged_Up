@@ -13,7 +13,7 @@ public class LeadScrewAdjustCommand extends CommandBase {
     this.speed = speed;
 
     inst = SubsystemsInstance.getInstance();
-    // addRequirements(inst.runSparkSubsystem);
+    addRequirements(inst.leadScrewSubsystem);
 
   }
 
@@ -33,7 +33,6 @@ public class LeadScrewAdjustCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    inst.leadScrewSubsystem.stopLeadScrew();
   }
 
   // Returns true when the command should end.

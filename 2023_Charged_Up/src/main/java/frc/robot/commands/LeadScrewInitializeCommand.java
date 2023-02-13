@@ -6,12 +6,12 @@ import frc.robot.subsystems.SubsystemsInstance;
 public class LeadScrewInitializeCommand extends CommandBase {
   
   private SubsystemsInstance inst;
-  private boolean isDone;
 
   public LeadScrewInitializeCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
 
     inst = SubsystemsInstance.getInstance();
+    addRequirements(inst.leadScrewSubsystem);
   }
 
   // Called when the command is initially scheduled.

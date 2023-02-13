@@ -9,9 +9,12 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.IO;
 import frc.robot.commands.LeadScrewInitializeCommand;
 
 public class LeadScrewSubsystem extends SubsystemBase {
+
+    private IO io;
     
     private CANSparkMax leadScrew;
     private SparkMaxLimitSwitch screwForwardLimit;
@@ -25,6 +28,8 @@ public class LeadScrewSubsystem extends SubsystemBase {
     private double leadScrewPitch = 8; //2mm pitch, 4 start, 8mm per revolution
     private double leadScrewRevPerInch = mmPerInch / leadScrewPitch; //3.175 revolution for 1 inch approx.
     private double leadScrewGearboxRatio = 9.0; //modify as hardware changes, current ratio is 9:1
+
+    private static double leadScrewTargetPosition;
 
     public LeadScrewSubsystem() {
         leadScrew = new CANSparkMax(5, MotorType.kBrushless);
@@ -42,6 +47,8 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrewController.setI(0);
         leadScrewController.setD(0);
         leadScrewController.setReference(0, ControlType.kPosition);
+        leadScrewController.setPositionPIDWrappingMinInput(0);
+        leadScrewController.setPositionPIDWrappingMaxInput(18);
 
         leadScrewInitialized = false;
 
@@ -55,6 +62,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrew.set(0.0);
         leadScrew.getEncoder().setPosition(0.0);
         leadScrewController.setReference(0, ControlType.kPosition);
+        leadScrewTargetPosition = 0;
 
         screwForwardLimit.enableLimitSwitch(true);
         screwReverseLimit.enableLimitSwitch(true);
@@ -81,6 +89,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
             state = LeadScrewStates.AUTO;
             leadScrewController.setPositionPIDWrappingEnabled(true);
             leadScrewController.setReference(position, ControlType.kPosition);
+            leadScrewTargetPosition = position;
         }
     }
 
@@ -88,6 +97,18 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrewController.setReference(leadScrew.getEncoder().getPosition(), ControlType.kPosition);
         leadScrewController.setPositionPIDWrappingEnabled(true);
         
+    }
+
+    public boolean isLeadScrewFinished() {
+        boolean isFinished = true;
+        if (state == LeadScrewStates.AUTO) {
+            double currentPos = leadScrew.getEncoder().getPosition();
+            if (Math.abs(leadScrewTargetPosition - currentPos) > 0.1) {  //current target is 0.1", may need adjustment
+                isFinished = false;
+            }
+        }
+
+        return isFinished;
     }
 
     @Override
@@ -104,6 +125,11 @@ public class LeadScrewSubsystem extends SubsystemBase {
                 CommandScheduler.getInstance().schedule(new LeadScrewInitializeCommand());
                 break;
             case MANUAL:
+                if (io.getManipulatorController().getLeftTrigger() <= 0.1 &&
+                        io.getManipulatorController().getRightTrigger() <= 0.1) {
+                    stopLeadScrew();
+                    state = LeadScrewStates.AUTO;
+                }
                 break;
             case AUTO:
                 break;

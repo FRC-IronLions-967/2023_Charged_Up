@@ -12,7 +12,7 @@ public class MoveArmToPlaceHighCommand extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
 
     inst = SubsystemsInstance.getInstance();
-    // addRequirements(inst.runSparkCommand);
+    addRequirements(inst.leadScrewSubsystem);
 
   }
 
@@ -25,18 +25,21 @@ public class MoveArmToPlaceHighCommand extends CommandBase {
   @Override
   public void execute() {
     inst.pnuematicSubsystem.toggleArm(true); //arm shoulder out
-    inst.leadScrewSubsystem.setLeadScrewPosition(14); //arm elbow set with lead screw extended 14 inches
+    inst.leadScrewSubsystem.setLeadScrewPosition(14); //arm elbow set with lead screw extended 14 inches, value is a guess and needs testing
   }
 
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    if (interrupted) {
+      inst.leadScrewSubsystem.stopLeadScrew();
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return inst.leadScrewSubsystem.isLeadScrewFinished();
   }
 }
