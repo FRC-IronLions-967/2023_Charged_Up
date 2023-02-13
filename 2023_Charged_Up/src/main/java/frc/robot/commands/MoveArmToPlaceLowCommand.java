@@ -3,15 +3,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class MoveArmCommand extends CommandBase {
+public class MoveArmToPlaceLowCommand extends CommandBase {
   
 
   private SubsystemsInstance inst;
-  private boolean direction;
 
-  public MoveArmCommand (boolean direction) {
+  public MoveArmToPlaceLowCommand () {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.direction = direction;
 
     inst = SubsystemsInstance.getInstance();
     // addRequirements(inst.runSparkCommand);
@@ -26,8 +24,8 @@ public class MoveArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    inst.pnuematicSubsystem.toggleArm(direction);
-
+    inst.pnuematicSubsystem.toggleArm(true); //arm shoulder out
+    inst.leadScrewSubsystem.setLeadScrewPosition(6); //arm elbow set with lead screw extended 14 inches
   }
 
 

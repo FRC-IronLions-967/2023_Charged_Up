@@ -20,10 +20,20 @@ public static IO getInstance() {
 }
 public void teleopInt(){
 
-    manipulatorController.whenButtonPressed("A", new LeadScrewCommand(1.0));
-    manipulatorController.whenButtonReleased("A", new LeadScrewCommand(0.0));
-    manipulatorController.whenButtonPressed("X", new LeadScrewCommand(-1.0));
-    manipulatorController.whenButtonReleased("X", new LeadScrewCommand(0.0));
+    manipulatorController.whenButtonPressed("A", new MoveClawCommand(true));
+    manipulatorController.whenButtonReleased("A", new MoveClawCommand(false));
+
+    manipulatorController.whenButtonPressed("Y", new MoveArmToPickupCommand());
+    manipulatorController.whenButtonPressed("B", new MoveArmToStorageCommand());
+    manipulatorController.whenPOVButtonPressed("N", new MoveArmToPlaceHighCommand());
+    manipulatorController.whenPOVButtonPressed("E", new MoveArmToPlaceMiddleCommand());
+    manipulatorController.whenPOVButtonPressed("S", new MoveArmToPlaceLowCommand());
+
+    if (manipulatorController.getLeftTrigger() > 0.1) {
+        new LeadScrewAdjustCommand(manipulatorController.getLeftTrigger());
+    } else if (manipulatorController.getRightTrigger() > 0.1) {
+        new LeadScrewAdjustCommand(-manipulatorController.getRightTrigger()); 
+    } 
 
 }
 public XBoxController getDriverController(){

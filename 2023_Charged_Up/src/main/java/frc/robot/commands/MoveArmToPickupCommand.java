@@ -3,17 +3,16 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class LeadScrewCommand extends CommandBase {
+public class MoveArmToPickupCommand extends CommandBase {
   
-  private double speed;
+
   private SubsystemsInstance inst;
 
-  public LeadScrewCommand(double speed) {
+  public MoveArmPickupCommand () {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.speed = speed;
 
     inst = SubsystemsInstance.getInstance();
-    // addRequirements(inst.runSparkSubsystem);
+    // addRequirements(inst.runSparkCommand);
 
   }
 
@@ -25,8 +24,8 @@ public class LeadScrewCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    inst.leadScrewSubsystem.runMotor(speed);
-
+    inst.pnuematicSubsystem.toggleArm(false); //arm shoulder in
+    inst.leadScrewSubsystem.setLeadScrewPosition(8); //arm elbow set with lead screw extended 8 inches
   }
 
 
