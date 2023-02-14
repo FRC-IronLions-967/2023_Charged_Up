@@ -8,6 +8,15 @@ public class IO {
     private XBoxController driverController;
     private XBoxController manipulatorController;
 
+    private boolean ARM_IN = false;
+    private boolean ARM_OUT = true;
+    private double PICKUP_POS = 8.0;
+    private double STORAGE_POS = 3.0;
+    private double PLACE_HIGH_POS = 14.0;
+    private double PLACE_MIDDLE_POS = 11.0;
+    private double PLACE_LOW_POS = 4.0;
+    private double START_POS = 0.5;
+
     private IO() {
         driverController = new XBoxController(0);
         manipulatorController = new XBoxController(1);
@@ -22,11 +31,11 @@ public void teleopInt(){
     manipulatorController.whenButtonPressed("A", new MoveClawCommand(true));
     manipulatorController.whenButtonReleased("A", new MoveClawCommand(false));
 
-    manipulatorController.whenButtonPressed("Y", new MoveArmToPickupCommand());
-    manipulatorController.whenButtonPressed("B", new MoveArmToStorageCommand());
-    manipulatorController.whenPOVButtonPressed("N", new MoveArmToPlaceHighCommand());
-    manipulatorController.whenPOVButtonPressed("E", new MoveArmToPlaceMiddleCommand());
-    manipulatorController.whenPOVButtonPressed("S", new MoveArmToPlaceLowCommand());
+    manipulatorController.whenButtonPressed("Y", new MoveArmToPositionCommand(ARM_IN, PICKUP_POS));
+    manipulatorController.whenButtonPressed("B", new MoveArmToPositionCommand(ARM_IN, STORAGE_POS));
+    manipulatorController.whenPOVButtonPressed("N", new MoveArmToPositionCommand(ARM_OUT, PLACE_HIGH_POS));
+    manipulatorController.whenPOVButtonPressed("E", new MoveArmToPositionCommand());
+    manipulatorController.whenPOVButtonPressed("S", new MoveArmToPositionCommand());
 
 }
 public XBoxController getDriverController(){

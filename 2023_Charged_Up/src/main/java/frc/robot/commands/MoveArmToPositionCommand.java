@@ -3,17 +3,20 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class MoveArmToStorageCommand extends CommandBase {
-  
+public class MoveArmToPositionCommand extends CommandBase {
 
   private SubsystemsInstance inst;
 
-  public MoveArmToStorageCommand () {
+  private boolean shoulderPosition;
+  private double elbowPosition;
+
+  public MoveArmToPositionCommand (boolean shoulderPosition, double elbowPosition) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     inst = SubsystemsInstance.getInstance();
     addRequirements(inst.leadScrewSubsystem);
-
+    this.shoulderPosition = shoulderPosition;
+    this.elbowPosition = elbowPosition;
   }
 
   // Called when the command is initially scheduled.
@@ -24,8 +27,8 @@ public class MoveArmToStorageCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    inst.pnuematicSubsystem.toggleArm(false); //arm shoulder in
-    inst.leadScrewSubsystem.setLeadScrewPosition(3); //arm elbow set with lead screw extended 3 inches, value is a guess and needs testing
+    inst.pnuematicSubsystem.toggleArm(shoulderPosition); //arm shoulder in
+    inst.leadScrewSubsystem.setLeadScrewPosition(elbowPosition); //arm elbow set with lead screw extended 8 inches, value is a guess and needs testing
   }
 
 
@@ -40,6 +43,6 @@ public class MoveArmToStorageCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return inst.leadScrewSubsystem.isLeadScrewFinished();
+    return true;
   }
 }

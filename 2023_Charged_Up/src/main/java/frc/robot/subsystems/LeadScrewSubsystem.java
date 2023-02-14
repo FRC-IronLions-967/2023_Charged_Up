@@ -32,7 +32,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
     private double leadScrewGearboxRatio = 9.0; //modify as hardware changes, current ratio is 9:1
 
     private double leadScrewTargetPosition;
-    private double leadScrewManualDeadband = 0.1;
+    private double leadScrewManualDeadband = 0.2;
 
     public LeadScrewSubsystem() {
         leadScrew = new CANSparkMax(5, MotorType.kBrushless);
@@ -42,7 +42,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
         screwReverseLimit = leadScrew.getReverseLimitSwitch(Type.kNormallyOpen);
 
         leadScrew.getEncoder().setPosition(0.0);
-        leadScrew.getEncoder().setPositionConversionFactor(leadScrewGearboxRatio * leadScrewRevPerInch);
+        leadScrew.getEncoder().setPositionConversionFactor(1 / (leadScrewGearboxRatio * leadScrewRevPerInch));
         leadScrew.setClosedLoopRampRate(1.0);
 
         leadScrewController = leadScrew.getPIDController();
@@ -105,7 +105,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
         boolean isFinished = true;
         if (state == LeadScrewStates.AUTO) {
             double currentPos = leadScrew.getEncoder().getPosition();
-            if (Math.abs(leadScrewTargetPosition - currentPos) > 0.1) {  //current target is 0.1", may need adjustment
+            if (Math.abs(leadScrewTargetPosition - currentPos) > 0.2) {  //current target is 0.2", may need adjustment
                 isFinished = false;
             }
         }
