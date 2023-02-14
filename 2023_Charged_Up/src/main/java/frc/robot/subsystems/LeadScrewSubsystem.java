@@ -80,8 +80,6 @@ public class LeadScrewSubsystem extends SubsystemBase {
         if (state != LeadScrewStates.UNINITIALIZED) {
             state = LeadScrewStates.MANUAL;
             leadScrewController.setReference(speed, ControlType.kDutyCycle);
-            
-            leadScrew.set(speed);
         }
     }
 
@@ -92,7 +90,6 @@ public class LeadScrewSubsystem extends SubsystemBase {
     public void setLeadScrewPosition(double position) {
         if (state != LeadScrewStates.UNINITIALIZED) {
             state = LeadScrewStates.AUTO;
-            leadScrewController.setPositionPIDWrappingEnabled(true);
             leadScrewController.setReference(position, ControlType.kPosition);
             leadScrewTargetPosition = position;
         }
@@ -100,7 +97,6 @@ public class LeadScrewSubsystem extends SubsystemBase {
 
     public void stopLeadScrew() {
         leadScrewController.setReference(leadScrew.getEncoder().getPosition(), ControlType.kPosition);
-        leadScrewController.setPositionPIDWrappingEnabled(true);
     }
 
     public boolean isLeadScrewFinished() {
