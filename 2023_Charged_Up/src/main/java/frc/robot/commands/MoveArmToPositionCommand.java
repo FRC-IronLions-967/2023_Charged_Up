@@ -10,6 +10,11 @@ public class MoveArmToPositionCommand extends CommandBase {
   private boolean shoulderPosition;
   private double elbowPosition;
 
+  /**
+   * Move the entire arm system to a specified position
+   * @param shoulderPosition pneumatic position
+   * @param elbowPosition lead screw position
+   */
   public MoveArmToPositionCommand (boolean shoulderPosition, double elbowPosition) {
     // Use addRequirements() here to declare subsystem dependencies.
 
