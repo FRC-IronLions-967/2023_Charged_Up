@@ -58,10 +58,13 @@ public class LeadScrewSubsystem extends SubsystemBase {
 
     }
 
+    /**
+     * Home lead screw and prepare it to accept commands, must be called before use
+     */
     public void initializeLeadScrew() {
         if (leadScrewInitialized) return;
         while (!screwReverseLimit.isPressed()) {
-            leadScrew.set(-0.3);
+            leadScrew.set(-0.5);
         }
         leadScrew.set(0.0);
         leadScrew.getEncoder().setPosition(0.0);
@@ -72,12 +75,16 @@ public class LeadScrewSubsystem extends SubsystemBase {
         screwReverseLimit.enableLimitSwitch(true);
 
         leadScrewInitialized = true;
-        state = LeadScrewStates.MANUAL;
+        state = LeadScrewStates.AUTO;
         System.out.println("Lead Screw Initialized");
     }
-
+    
+    /**
+     * adjust lead scrwe without PID position control
+     * @param speed duty cycle value -1 to 1
+     */
     public void runMotor(double speed) {
-        if (state != LeadScrewStates.UNINITIALIZED) {
+        if (state != LeadScrewStates.UNINITIALIZED && state != LeadScrewStates.INITIALIZING) {
             state = LeadScrewStates.MANUAL;
             leadScrewController.setReference(speed, ControlType.kDutyCycle);
         }
@@ -88,17 +95,26 @@ public class LeadScrewSubsystem extends SubsystemBase {
      * @param position in inches
      */
     public void setLeadScrewPosition(double position) {
-        if (state != LeadScrewStates.UNINITIALIZED) {
+        if (state != LeadScrewStates.UNINITIALIZED && state != LeadScrewStates.INITIALIZING) {
             state = LeadScrewStates.AUTO;
             leadScrewController.setReference(position, ControlType.kPosition);
             leadScrewTargetPosition = position;
         }
     }
 
+    /**
+     * interrupts both AUTO and MANUAL control, turns on positional control at the current position
+     */
     public void stopLeadScrew() {
-        leadScrewController.setReference(leadScrew.getEncoder().getPosition(), ControlType.kPosition);
+        if (state != LeadScrewStates.UNINITIALIZED && state != LeadScrewStates.INITIALIZING) {
+            leadScrewController.setReference(leadScrew.getEncoder().getPosition(), ControlType.kPosition);
+        }
     }
 
+    /**
+     * compares AUTO mode commanded position to current position, always returns true in MANUAL mode
+     * @return true if lead screw is at the commanded position
+     */
     public boolean isLeadScrewFinished() {
         boolean isFinished = true;
         if (state == LeadScrewStates.AUTO) {
@@ -111,6 +127,9 @@ public class LeadScrewSubsystem extends SubsystemBase {
         return isFinished;
     }
 
+    /**
+     * implements lead screw state machine, called by commandScheduler
+     */
     @Override
     public void periodic() {
         switch(state) {
