@@ -46,7 +46,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrew.setClosedLoopRampRate(1.0);
 
         leadScrewController = leadScrew.getPIDController();
-        leadScrewController.setP(1);  //needs tuning
+        leadScrewController.setP(0);  //needs tuning
         leadScrewController.setI(0);
         leadScrewController.setD(0);
         leadScrewController.setReference(0, ControlType.kPosition);

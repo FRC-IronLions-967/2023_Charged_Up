@@ -15,7 +15,7 @@ public class IO {
     private double PLACE_HIGH_POS = 14.0;
     private double PLACE_MIDDLE_POS = 11.0;
     private double PLACE_LOW_POS = 4.0;
-    private double START_POS = 0.5;
+    private double START_POS = 0.1;
 
     private IO() {
         driverController = new XBoxController(0);
