@@ -52,6 +52,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrewController.setReference(0, ControlType.kPosition);
         leadScrewController.setPositionPIDWrappingMinInput(0);
         leadScrewController.setPositionPIDWrappingMaxInput(18);
+        leadScrewController.setPositionPIDWrappingEnabled(true);
 
         leadScrewInitialized = false;
 
@@ -78,7 +79,8 @@ public class LeadScrewSubsystem extends SubsystemBase {
     public void runMotor(double speed) {
         if (state != LeadScrewStates.UNINITIALIZED) {
             state = LeadScrewStates.MANUAL;
-            leadScrewController.setPositionPIDWrappingEnabled(false);
+            leadScrewController.setReference(speed, ControlType.kDutyCycle);
+            
             leadScrew.set(speed);
         }
     }
