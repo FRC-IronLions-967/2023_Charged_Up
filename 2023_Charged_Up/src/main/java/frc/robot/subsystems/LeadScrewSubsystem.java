@@ -24,7 +24,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
     private SparkMaxPIDController leadScrewController;
 
     private Boolean leadScrewInitialized;
-    private static LeadScrewStates state = LeadScrewStates.UNINITIALIZED;
+    private static LeadScrewStates state;
 
     private double mmPerInch = 25.4;
     private double leadScrewPitch = 8; //2mm pitch, 4 start, 8mm per revolution
@@ -55,6 +55,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrewController.setPositionPIDWrappingEnabled(true);
 
         leadScrewInitialized = false;
+        state = LeadScrewStates.UNINITIALIZED;
 
     }
 
@@ -127,6 +128,10 @@ public class LeadScrewSubsystem extends SubsystemBase {
         return isFinished;
     }
 
+    public LeadScrewStates getState() {
+        return state;
+    }
+
     /**
      * implements lead screw state machine, called by commandScheduler
      */
@@ -136,12 +141,12 @@ public class LeadScrewSubsystem extends SubsystemBase {
             case UNINITIALIZED:
                 if (!leadScrewInitialized) {
                     state = LeadScrewStates.INITIALIZING;
+                    CommandScheduler.getInstance().schedule(new LeadScrewInitializeCommand());
                 } else {
                     state = LeadScrewStates.MANUAL;
                 }
                 break;
             case INITIALIZING:
-                CommandScheduler.getInstance().schedule(new LeadScrewInitializeCommand());
                 break;
             case MANUAL:
                 if (io.getManipulatorController().getLeftTrigger() > leadScrewManualDeadband ||
