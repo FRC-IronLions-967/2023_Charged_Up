@@ -6,10 +6,12 @@ import frc.robot.subsystems.SubsystemsInstance;
 public class RunAutobalancingCommand extends CommandBase {
   
   private SubsystemsInstance inst;
+  private boolean autoBal;
 
-  public RunAutobalancingCommand() {
+  public RunAutobalancingCommand(boolean autoBal) {
     // Use addRequirements() here to declare subsystem dependencies.
 
+    this.autoBal = autoBal;
     inst = SubsystemsInstance.getInstance();
     // addRequirements(inst.runSparkSubsystem);
 
@@ -23,8 +25,10 @@ public class RunAutobalancingCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // inst.driveSubsystem.operatorControl();
+    if(autoBal){
+    inst.driveSubsystem.operatorControl();
     System.out.println("Autobalancing command ran");
+  }
   }
 
 
