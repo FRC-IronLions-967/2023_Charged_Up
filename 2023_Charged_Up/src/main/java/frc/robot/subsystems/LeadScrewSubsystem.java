@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.IO;
@@ -43,7 +44,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
 
         leadScrew.getEncoder().setPosition(0.0);
         leadScrew.getEncoder().setPositionConversionFactor(1 / (leadScrewGearboxRatio * leadScrewRevPerInch));
-        leadScrew.setClosedLoopRampRate(1.0);
+        leadScrew.setClosedLoopRampRate(0.5);
 
         leadScrewController = leadScrew.getPIDController();
         leadScrewController.setP(0);  //needs tuning
@@ -65,7 +66,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
     public void initializeLeadScrew() {
         if (leadScrewInitialized) return;
         while (!screwReverseLimit.isPressed()) {
-            leadScrew.set(-0.5);
+            leadScrewController.setReference(-0.5, ControlType.kDutyCycle);
         }
         leadScrew.set(0.0);
         leadScrew.getEncoder().setPosition(0.0);
@@ -108,7 +109,9 @@ public class LeadScrewSubsystem extends SubsystemBase {
      */
     public void stopLeadScrew() {
         if (state != LeadScrewStates.UNINITIALIZED && state != LeadScrewStates.INITIALIZING) {
-            leadScrewController.setReference(leadScrew.getEncoder().getPosition(), ControlType.kPosition);
+            double currentPosition = leadScrew.getEncoder().getPosition();
+            leadScrewController.setReference(currentPosition, ControlType.kPosition);
+            leadScrewTargetPosition = currentPosition;
         }
     }
 
@@ -128,8 +131,21 @@ public class LeadScrewSubsystem extends SubsystemBase {
         return isFinished;
     }
 
+    /**
+     * get the active state in the lead screw state machine
+     * @return the active state
+     */
     public LeadScrewStates getState() {
         return state;
+    }
+
+    /**
+     * fallback method if setPositionConversionFactor does not work as expected.  Should be called locally before setting reference positions
+     * @param commandedPosition position in inches
+     * @return position in revolutions
+     */
+    private double convertLeadScrewPosition(double commandedPosition) {
+        return commandedPosition * leadScrewGearboxRatio * leadScrewRevPerInch;
     }
 
     /**
@@ -163,7 +179,12 @@ public class LeadScrewSubsystem extends SubsystemBase {
                         io.getManipulatorController().getRightTrigger() > leadScrewManualDeadband) {
                     CommandScheduler.getInstance().schedule(new LeadScrewStopCommand());
                     state = LeadScrewStates.MANUAL;
-                }   
+                }
+                SmartDashboard.putNumber("Lead Screw Actual Position", leadScrew.getEncoder().getPosition());
+                SmartDashboard.putNumber("Lead Screw Commanded Position", leadScrewTargetPosition);
+                leadScrewController.setP(SmartDashboard.getNumber("Lead Screw P value", 0));
+                leadScrewController.setI(SmartDashboard.getNumber("Lead Screw I value", 0));
+                leadScrewController.setD(SmartDashboard.getNumber("Lead Screw D value", 0));
                 break;
         }
     }
