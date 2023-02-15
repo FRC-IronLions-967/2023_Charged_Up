@@ -2,8 +2,10 @@ package frc.robot.auto;
 
 public class Autonomous implements AutonomousInterface {
 
+    private static AutoStateMachine state = AutoStateMachine.IDLE;
+
     public Autonomous(){
-        //Constructor
+
     }
 
     @Override
@@ -14,8 +16,19 @@ public class Autonomous implements AutonomousInterface {
 
     @Override
     public void periodic() {
-        // TODO Auto-generated method stub
-        
+        switch(state) {
+            case IDLE:
+                
+                break;
+            case INITIALIZING:
+                
+                break;
+            case DRIVE:
+
+            break;
+            case PLACE_GAME_PIECE:
+            
+            break;
+        }
     }
-    
 }
