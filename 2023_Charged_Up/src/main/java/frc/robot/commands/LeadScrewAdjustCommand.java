@@ -3,17 +3,17 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class LeadScrewCommand extends CommandBase {
+public class LeadScrewAdjustCommand extends CommandBase {
   
   private double speed;
   private SubsystemsInstance inst;
 
-  public LeadScrewCommand(double speed) {
+  public LeadScrewAdjustCommand(double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.speed = speed;
 
     inst = SubsystemsInstance.getInstance();
-    // addRequirements(inst.runSparkSubsystem);
+    addRequirements(inst.leadScrewSubsystem);
 
   }
 
