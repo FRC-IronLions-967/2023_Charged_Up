@@ -10,7 +10,7 @@ public class IO {
 
     private boolean ARM_IN = false;
     private boolean ARM_OUT = true;
-    private double PICKUP_POS = 11.5;
+    private double PICKUP_POS = 10.8;
     private double STORAGE_POS = 3.0;
     private double PLACE_HIGH_POS = 14.3;
     private double PLACE_MIDDLE_POS = 13.5;

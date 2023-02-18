@@ -1,7 +1,11 @@
 package frc.robot.auto;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.ClawWaitCommand;
 import frc.robot.commands.MoveArmToPositionCommand;
+import frc.robot.commands.MoveClawCommand;
+import frc.robot.commands.RunAutoDriveCommand;
 import frc.robot.subsystems.LeadScrewStates;
 import frc.robot.subsystems.LeadScrewSubsystem;
 import frc.robot.subsystems.SubsystemsInstance;
@@ -10,10 +14,16 @@ public class Autonomous implements AutonomousInterface {
 
     private static AutoStateMachine state = AutoStateMachine.IDLE;
     private boolean autoInit;
-    private SubsystemsInstance inst;
+    private SubsystemsInstance inst; 
+    
+  
 
     public Autonomous(){
         inst = SubsystemsInstance.getInstance();
+    }
+
+    public void UpdateState(AutoStateMachine newState){
+        state = newState;
     }
 
     @Override
@@ -38,18 +48,26 @@ public class Autonomous implements AutonomousInterface {
                 
                 break;
             case LEAD_SCREW_OUT:
-                CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(false, 8));
+                CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(false, 11));
                 state=AutoStateMachine.FINISH_ARM;
                 break;
             case FINISH_ARM:
                 if (inst.leadScrewSubsystem.isLeadScrewFinished()) {
-                    CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(true, 14));
+                    CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(true, 14.3));
                     state = AutoStateMachine.PLACE_GAME_PIECE;
                 }
             break;
             case PLACE_GAME_PIECE:
+                if (inst.leadScrewSubsystem.isLeadScrewFinished()) {
+                    CommandScheduler.getInstance().schedule(new MoveClawCommand(true));
+                    CommandScheduler.getInstance().schedule(new ClawWaitCommand(1, false));
+                }
                 break;
             case DRIVE:
+            // if() {
+            //     CommandScheduler.getInstance().schedule(new RunAutoDriveCommand(1, -1, -1));
+            //     CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(false, 3.0));
+            // }
                 break;
             default:
                 break;
@@ -62,3 +80,4 @@ public class Autonomous implements AutonomousInterface {
 //2. arm pneumatics out, rest of leadScrew 
 //3. open claw
 //4. Drive Back, arm pneumatics in, leadScrew to storage position 
+//5. 

@@ -58,7 +58,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrewController = leadScrew.getPIDController();
         leadScrewController.setP(2);  //needs tuning
         leadScrewController.setI(0);
-        leadScrewController.setD(.1);
+        leadScrewController.setD(.5);
         leadScrewController.setReference(0, ControlType.kPosition);
         leadScrewController.setPositionPIDWrappingEnabled(false);
 
