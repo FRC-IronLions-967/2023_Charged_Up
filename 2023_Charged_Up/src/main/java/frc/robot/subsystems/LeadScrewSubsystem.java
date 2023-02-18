@@ -59,6 +59,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrewController.setI(0);
         leadScrewController.setD(0);
         leadScrewController.setReference(0, ControlType.kPosition);
+        leadScrewController.setPositionPIDWrappingEnabled(false);
 
         leadScrewInitialized = false;
         state = LeadScrewStates.UNINITIALIZED;
@@ -99,6 +100,10 @@ public class LeadScrewSubsystem extends SubsystemBase {
     public void runMotor(double speed) {
         if (state != LeadScrewStates.UNINITIALIZED && state != LeadScrewStates.INITIALIZING) {
             state = LeadScrewStates.MANUAL;
+            if((screwForwardLimit.isPressed() && speed >= 0.0) ||
+               (screwReverseLimit.isPressed() && speed <= 0.0)) {
+                speed = 0.0;
+            }
             leadScrewController.setReference(speed, ControlType.kDutyCycle);
         }
     }
@@ -109,12 +114,21 @@ public class LeadScrewSubsystem extends SubsystemBase {
      */
     public void setLeadScrewPosition(double position) {
         if (state != LeadScrewStates.UNINITIALIZED && state != LeadScrewStates.INITIALIZING) {
-
+            state = LeadScrewStates.AUTO;
             // guard against out of range positions
             position = (position < leadScrewMinPosition) ? leadScrewMinPosition : position;
             position = (position > leadScrewMaxPosition) ? leadScrewMaxPosition : position;
 
-            state = LeadScrewStates.AUTO;
+            //if we're up against a limit switch and going to move off it
+            if ((screwForwardLimit.isPressed() && position < leadScrew.getEncoder().getPosition()) ||
+                (screwReverseLimit.isPressed() && position > leadScrew.getEncoder().getPosition())) {
+                    
+                leadScrewLimitSwitchKillEnabled = false;
+                screwForwardLimit.enableLimitSwitch(false);
+                screwReverseLimit.enableLimitSwitch(false);
+                leadScrew.clearFaults();
+            }
+
             System.out.println("Commanded Position: " + position);
             System.out.println("Current Position: " + leadScrew.getEncoder().getPosition());
             leadScrewController.setReference(position, ControlType.kPosition);
@@ -171,29 +185,15 @@ public class LeadScrewSubsystem extends SubsystemBase {
      */
     private void checkLimitSwitchState() {
         // limit switches should always disable the controller in MANUAL mode
-        if (state == LeadScrewStates.MANUAL && !leadScrewLimitSwitchKillEnabled) {
+        if (state == LeadScrewStates.MANUAL && leadScrewLimitSwitchKillEnabled) {
+            leadScrewLimitSwitchKillEnabled = false;
+            screwForwardLimit.enableLimitSwitch(false);
+            screwReverseLimit.enableLimitSwitch(false);
+        } else if (state == LeadScrewStates.AUTO && !leadScrewLimitSwitchKillEnabled &&
+                   !screwForwardLimit.isPressed() && !screwReverseLimit.isPressed()) {
             leadScrewLimitSwitchKillEnabled = true;
             screwForwardLimit.enableLimitSwitch(true);
             screwReverseLimit.enableLimitSwitch(true);
-        } else if (state == LeadScrewStates.AUTO) {
-            if (screwForwardLimit.isPressed()) {
-                screwForwardLimit.enableLimitSwitch(false);
-                leadScrewLimitSwitchKillEnabled = false;
-                leadScrew.clearFaults();
-                leadScrewController.setReference(-0.5, ControlType.kDutyCycle);
-            } else if (screwReverseLimit.isPressed()) {
-                screwReverseLimit.enableLimitSwitch(false);
-                leadScrewLimitSwitchKillEnabled = false;
-                leadScrew.clearFaults();
-                leadScrewController.setReference(0.5, ControlType.kDutyCycle);
-            }
-
-            if(!screwForwardLimit.isPressed() && !screwReverseLimit.isPressed() && !leadScrewLimitSwitchKillEnabled) {
-                leadScrewLimitSwitchKillEnabled = true;
-                screwForwardLimit.enableLimitSwitch(true);
-                screwReverseLimit.enableLimitSwitch(true);
-                stopLeadScrew();
-            }
         }
     }
 
