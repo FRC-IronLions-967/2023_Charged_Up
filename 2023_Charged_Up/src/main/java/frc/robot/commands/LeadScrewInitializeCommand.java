@@ -22,7 +22,7 @@ public class LeadScrewInitializeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    inst.leadScrewSubsystem.initializeLeadScrew();
+    inst.leadScrewSubsystem.homeLeadScrew();
   }
 
 

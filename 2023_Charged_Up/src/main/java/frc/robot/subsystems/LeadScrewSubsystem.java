@@ -38,40 +38,46 @@ public class LeadScrewSubsystem extends SubsystemBase {
     public LeadScrewSubsystem() {
         leadScrew = new CANSparkMax(5, MotorType.kBrushless);
         leadScrew.setInverted(true);
+        leadScrew.clearFaults();
+        System.out.println("Lead Screw Started");
 
         screwForwardLimit = leadScrew.getForwardLimitSwitch(Type.kNormallyOpen);
         screwReverseLimit = leadScrew.getReverseLimitSwitch(Type.kNormallyOpen);
+        screwForwardLimit.enableLimitSwitch(false);
+        screwReverseLimit.enableLimitSwitch(false);
 
         leadScrew.getEncoder().setPosition(0.0);
         leadScrew.getEncoder().setPositionConversionFactor(1 / (leadScrewGearboxRatio * leadScrewRevPerInch));
         leadScrew.setClosedLoopRampRate(0.5);
 
         leadScrewController = leadScrew.getPIDController();
-        leadScrewController.setP(0);  //needs tuning
+        leadScrewController.setP(4);  //needs tuning
         leadScrewController.setI(0);
         leadScrewController.setD(0);
         leadScrewController.setReference(0, ControlType.kPosition);
         leadScrewController.setPositionPIDWrappingMinInput(0);
-        leadScrewController.setPositionPIDWrappingMaxInput(18);
-        leadScrewController.setPositionPIDWrappingEnabled(true);
+        leadScrewController.setPositionPIDWrappingMaxInput(17);
+        leadScrewController.setPositionPIDWrappingEnabled(false);
 
         leadScrewInitialized = false;
         state = LeadScrewStates.UNINITIALIZED;
 
+        io = IO.getInstance();
     }
 
+    public void homeLeadScrew() {
+        leadScrewController.setReference(-0.5, ControlType.kDutyCycle);
+        state = LeadScrewStates.INITIALIZING;
+    }
     /**
      * Home lead screw and prepare it to accept commands, must be called before use
      */
     public void initializeLeadScrew() {
         if (leadScrewInitialized) return;
-        while (!screwReverseLimit.isPressed()) {
-            leadScrewController.setReference(-0.5, ControlType.kDutyCycle);
-        }
-        leadScrew.set(0.0);
+        leadScrewController.setReference(0.0, ControlType.kDutyCycle);
         leadScrew.getEncoder().setPosition(0.0);
-        leadScrewController.setReference(0, ControlType.kPosition);
-        leadScrewTargetPosition = 0;
+        leadScrewController.setReference(1, ControlType.kPosition);
+        leadScrewTargetPosition = 1;
 
         screwForwardLimit.enableLimitSwitch(true);
         screwReverseLimit.enableLimitSwitch(true);
@@ -99,6 +105,8 @@ public class LeadScrewSubsystem extends SubsystemBase {
     public void setLeadScrewPosition(double position) {
         if (state != LeadScrewStates.UNINITIALIZED && state != LeadScrewStates.INITIALIZING) {
             state = LeadScrewStates.AUTO;
+            System.out.println("Commanded Position: " + position);
+            System.out.println("Current Position: " + leadScrew.getEncoder().getPosition());
             leadScrewController.setReference(position, ControlType.kPosition);
             leadScrewTargetPosition = position;
         }
@@ -156,13 +164,16 @@ public class LeadScrewSubsystem extends SubsystemBase {
         switch(state) {
             case UNINITIALIZED:
                 if (!leadScrewInitialized) {
-                    state = LeadScrewStates.INITIALIZING;
                     CommandScheduler.getInstance().schedule(new LeadScrewInitializeCommand());
                 } else {
                     state = LeadScrewStates.MANUAL;
                 }
                 break;
-            case INITIALIZING:
+            case INITIALIZING: 
+                if (screwReverseLimit.isPressed()){
+                    System.out.println("pressed");
+                    initializeLeadScrew();
+                }
                 break;
             case MANUAL:
                 if (io.getManipulatorController().getLeftTrigger() > leadScrewManualDeadband ||
@@ -173,6 +184,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
                     CommandScheduler.getInstance().schedule(new LeadScrewStopCommand());
                     state = LeadScrewStates.AUTO;
                 }
+                System.out.println(state);
                 break;
             case AUTO:
                 if (io.getManipulatorController().getLeftTrigger() > leadScrewManualDeadband ||
@@ -180,11 +192,11 @@ public class LeadScrewSubsystem extends SubsystemBase {
                     CommandScheduler.getInstance().schedule(new LeadScrewStopCommand());
                     state = LeadScrewStates.MANUAL;
                 }
-                SmartDashboard.putNumber("Lead Screw Actual Position", leadScrew.getEncoder().getPosition());
-                SmartDashboard.putNumber("Lead Screw Commanded Position", leadScrewTargetPosition);
-                leadScrewController.setP(SmartDashboard.getNumber("Lead Screw P value", 0));
-                leadScrewController.setI(SmartDashboard.getNumber("Lead Screw I value", 0));
-                leadScrewController.setD(SmartDashboard.getNumber("Lead Screw D value", 0));
+                //SmartDashboard.putNumber("Lead Screw Actual Position", leadScrew.getEncoder().getPosition());
+                //SmartDashboard.putNumber("Lead Screw Commanded Position", leadScrewTargetPosition);
+                //leadScrewController.setP(SmartDashboard.getNumber("Lead Screw P value", 0));
+                //leadScrewController.setI(SmartDashboard.getNumber("Lead Screw I value", 0));
+                //leadScrewController.setD(SmartDashboard.getNumber("Lead Screw D value", 0));
                 break;
         }
     }
