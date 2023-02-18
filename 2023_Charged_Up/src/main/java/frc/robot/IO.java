@@ -10,11 +10,11 @@ public class IO {
 
     private boolean ARM_IN = false;
     private boolean ARM_OUT = true;
-    private double PICKUP_POS = 9.0;
+    private double PICKUP_POS = 11.5;
     private double STORAGE_POS = 3.0;
-    private double PLACE_HIGH_POS = 13.0;
-    private double PLACE_MIDDLE_POS = 11.0;
-    private double PLACE_LOW_POS = 5.0;
+    private double PLACE_HIGH_POS = 14.3;
+    private double PLACE_MIDDLE_POS = 13.5;
+    private double PLACE_LOW_POS = 7.0;
     private double START_POS = 1;
 
     private IO() {
@@ -36,7 +36,7 @@ public void teleopInt(){
     manipulatorController.whenPOVButtonPressed("N", new MoveArmToPositionCommand(ARM_OUT, PLACE_HIGH_POS));
     manipulatorController.whenPOVButtonPressed("E", new MoveArmToPositionCommand(ARM_IN, START_POS));
     manipulatorController.whenPOVButtonPressed("S", new MoveArmToPositionCommand(ARM_OUT, PLACE_LOW_POS));
-    manipulatorController.whenPOVButtonPressed("W", new MoveArmToPositionCommand(ARM_IN, PLACE_MIDDLE_POS));
+    manipulatorController.whenPOVButtonPressed("W", new MoveArmToPositionCommand(ARM_OUT, PLACE_MIDDLE_POS));
 
 }
 public XBoxController getDriverController(){

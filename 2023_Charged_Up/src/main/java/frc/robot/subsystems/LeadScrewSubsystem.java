@@ -40,8 +40,9 @@ public class LeadScrewSubsystem extends SubsystemBase {
 
     public LeadScrewSubsystem() {
         leadScrew = new CANSparkMax(5, MotorType.kBrushless);
-        leadScrew.setInverted(true);
         leadScrew.clearFaults();
+        leadScrew.setInverted(true);
+        
         System.out.println("Lead Screw Started");
 
         screwForwardLimit = leadScrew.getForwardLimitSwitch(Type.kNormallyOpen);
@@ -55,9 +56,9 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrew.setClosedLoopRampRate(0.5);
 
         leadScrewController = leadScrew.getPIDController();
-        leadScrewController.setP(4);  //needs tuning
+        leadScrewController.setP(2);  //needs tuning
         leadScrewController.setI(0);
-        leadScrewController.setD(0);
+        leadScrewController.setD(.1);
         leadScrewController.setReference(0, ControlType.kPosition);
         leadScrewController.setPositionPIDWrappingEnabled(false);
 
@@ -84,9 +85,9 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrewController.setReference(1, ControlType.kPosition);
         leadScrewTargetPosition = 1;
 
-        leadScrewLimitSwitchKillEnabled = true;
-        screwForwardLimit.enableLimitSwitch(true);
-        screwReverseLimit.enableLimitSwitch(true);
+        leadScrewLimitSwitchKillEnabled = false;
+        screwForwardLimit.enableLimitSwitch(false);
+        screwReverseLimit.enableLimitSwitch(false);
 
         leadScrewInitialized = true;
         state = LeadScrewStates.AUTO;
@@ -225,7 +226,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
                     CommandScheduler.getInstance().schedule(new LeadScrewStopCommand());
                     state = LeadScrewStates.AUTO;
                 }
-                checkLimitSwitchState();
+                //checkLimitSwitchState();
                 break;
             case AUTO:
                 if (io.getManipulatorController().getLeftTrigger() > leadScrewManualDeadband ||
@@ -233,7 +234,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
                     CommandScheduler.getInstance().schedule(new LeadScrewStopCommand());
                     state = LeadScrewStates.MANUAL;
                 }
-                checkLimitSwitchState();
+                //checkLimitSwitchState();
 
                 //SmartDashboard.putNumber("Lead Screw Actual Position", leadScrew.getEncoder().getPosition());
                 //SmartDashboard.putNumber("Lead Screw Commanded Position", leadScrewTargetPosition);
