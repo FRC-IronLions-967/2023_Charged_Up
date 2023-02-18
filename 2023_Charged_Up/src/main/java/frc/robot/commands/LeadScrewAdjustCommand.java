@@ -25,7 +25,7 @@ public class LeadScrewAdjustCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // inst.pnuematicSubsystem.toggleArm(direction);
+    inst.leadScrewSubsystem.runMotor(speed);
 
   }
 
