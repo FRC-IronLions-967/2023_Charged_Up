@@ -15,6 +15,7 @@ public class PnuematicSubsystem extends SubsystemBase {
     private DoubleSolenoid clawSol;
     private DoubleSolenoid armSol_1;
     //private DoubleSolenoid armSol_2;
+    private boolean clawPosition;
 
     
 
@@ -37,6 +38,7 @@ public class PnuematicSubsystem extends SubsystemBase {
         } else {
             clawSol.set(kReverse);
         }
+        clawPosition = direction;
     }
 
     public void toggleArm(boolean direction){
@@ -49,6 +51,9 @@ public class PnuematicSubsystem extends SubsystemBase {
         }
     }
    
+    public boolean getClawPosition(){
+        return clawPosition;
+    }
     //hello!
 
     @Override
