@@ -56,9 +56,9 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrew.setClosedLoopRampRate(0.5);
 
         leadScrewController = leadScrew.getPIDController();
-        leadScrewController.setP(2);  //needs tuning
+        leadScrewController.setP(1.5);  //needs tuning
         leadScrewController.setI(0);
-        leadScrewController.setD(.1);
+        leadScrewController.setD(.5);
         leadScrewController.setReference(0, ControlType.kPosition);
         leadScrewController.setPositionPIDWrappingEnabled(false);
 
@@ -218,22 +218,22 @@ public class LeadScrewSubsystem extends SubsystemBase {
                 }
                 break;
             case MANUAL:
-                if (io.getManipulatorController().getLeftTrigger() > leadScrewManualDeadband ||
-                        io.getManipulatorController().getRightTrigger() > leadScrewManualDeadband) {
-                    CommandScheduler.getInstance().schedule(new LeadScrewAdjustCommand(
-                        io.getManipulatorController().getLeftTrigger() - io.getManipulatorController().getRightTrigger()));
-                } else {
-                    CommandScheduler.getInstance().schedule(new LeadScrewStopCommand());
-                    state = LeadScrewStates.AUTO;
-                }
+                // if (io.getManipulatorController().get() > leadScrewManualDeadband ||
+                //         io.getManipulatorController().getRightTrigger() > leadScrewManualDeadband) {
+                //     CommandScheduler.getInstance().schedule(new LeadScrewAdjustCommand(
+                //         io.getManipulatorController().getLeftTrigger() - io.getManipulatorController().getRightTrigger()));
+                // } else {
+                //     CommandScheduler.getInstance().schedule(new LeadScrewStopCommand());
+                //     state = LeadScrewStates.AUTO;
+                // }
                 //checkLimitSwitchState();
                 break;
             case AUTO:
-                if (io.getManipulatorController().getLeftTrigger() > leadScrewManualDeadband ||
-                        io.getManipulatorController().getRightTrigger() > leadScrewManualDeadband) {
-                    CommandScheduler.getInstance().schedule(new LeadScrewStopCommand());
-                    state = LeadScrewStates.MANUAL;
-                }
+                // if (io.getManipulatorController().getLeftTrigger() > leadScrewManualDeadband ||
+                //         io.getManipulatorController().getRightTrigger() > leadScrewManualDeadband) {
+                //     CommandScheduler.getInstance().schedule(new LeadScrewStopCommand());
+                //     state = LeadScrewStates.MANUAL;
+                // }
                 //checkLimitSwitchState();
 
                 //SmartDashboard.putNumber("Lead Screw Actual Position", leadScrew.getEncoder().getPosition());
