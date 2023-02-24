@@ -170,8 +170,8 @@ public class LeadScrewSubsystem extends SubsystemBase {
 
     private void checkLimitSwitches() {
         double currentPosition = leadScrew.getEncoder().getPosition();
-        if ((screwReverseLimit.isPressed() && leadScrewTargetPosition < currentPosition - 0.1) ||  // additional factor is to account for imperfect positioning, 
-            (screwForwardLimit.isPressed() && leadScrewTargetPosition > currentPosition + 0.1)) {  // we're only interested in significant differences
+        if ((screwReverseLimit.isPressed() && leadScrewTargetPosition < currentPosition - 0.2) ||  // additional factor is to account for imperfect positioning, 
+            (screwForwardLimit.isPressed() && leadScrewTargetPosition > currentPosition + 0.2)) {  // we're only interested in significant differences
             CommandScheduler.getInstance().schedule(new LeadScrewStopCommand());
         }  
     }
@@ -198,12 +198,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
             case MANUAL:
                 break;
             case AUTO:
-                if( !leadScrewLimitSwitchPressed && (screwForwardLimit.isPressed() || screwReverseLimit.isPressed())) {
-                    checkLimitSwitches();
-                    leadScrewLimitSwitchPressed = true;
-                } else if (leadScrewLimitSwitchPressed && !screwForwardLimit.isPressed() && !screwReverseLimit.isPressed()) {
-                    leadScrewLimitSwitchPressed = false;
-                }
+                checkLimitSwitches();
                 break;
         }
     }
