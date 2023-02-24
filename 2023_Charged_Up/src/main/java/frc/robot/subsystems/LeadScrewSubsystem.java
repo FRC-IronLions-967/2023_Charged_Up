@@ -7,11 +7,9 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.IO;
-import frc.robot.commands.LeadScrewAdjustCommand;
 import frc.robot.commands.LeadScrewInitializeCommand;
 import frc.robot.commands.LeadScrewStopCommand;
 
@@ -25,13 +23,12 @@ public class LeadScrewSubsystem extends SubsystemBase {
     private SparkMaxPIDController leadScrewController;
 
     private Boolean leadScrewInitialized;
-    private boolean leadScrewLimitSwitchKillEnabled;
+    private boolean leadScrewLimitSwitchPressed;
     private double leadScrewTargetPosition;
     private static LeadScrewStates state;
 
-    private double leadScrewManualDeadband = 0.2;
     private double leadScrewMinPosition = 0.0;
-    private double leadScrewMaxPosition = 17.0;
+    private double leadScrewMaxPosition = 15.0;
 
     private double mmPerInch = 25.4;
     private double leadScrewPitch = 8; //2mm pitch, 4 start, 8mm per revolution
@@ -47,7 +44,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
 
         screwForwardLimit = leadScrew.getForwardLimitSwitch(Type.kNormallyOpen);
         screwReverseLimit = leadScrew.getReverseLimitSwitch(Type.kNormallyOpen);
-        leadScrewLimitSwitchKillEnabled = false;
+        leadScrewLimitSwitchPressed = false;
         screwForwardLimit.enableLimitSwitch(false);
         screwReverseLimit.enableLimitSwitch(false);
 
@@ -85,7 +82,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrewController.setReference(1, ControlType.kPosition);
         leadScrewTargetPosition = 1;
 
-        leadScrewLimitSwitchKillEnabled = false;
+        leadScrewLimitSwitchPressed = false;
         screwForwardLimit.enableLimitSwitch(false);
         screwReverseLimit.enableLimitSwitch(false);
 
@@ -119,16 +116,6 @@ public class LeadScrewSubsystem extends SubsystemBase {
             // guard against out of range positions
             position = (position < leadScrewMinPosition) ? leadScrewMinPosition : position;
             position = (position > leadScrewMaxPosition) ? leadScrewMaxPosition : position;
-
-            //if we're up against a limit switch and going to move off it
-            if ((screwForwardLimit.isPressed() && position < leadScrew.getEncoder().getPosition()) ||
-                (screwReverseLimit.isPressed() && position > leadScrew.getEncoder().getPosition())) {
-                    
-                leadScrewLimitSwitchKillEnabled = false;
-                screwForwardLimit.enableLimitSwitch(false);
-                screwReverseLimit.enableLimitSwitch(false);
-                leadScrew.clearFaults();
-            }
 
             System.out.println("Commanded Position: " + position);
             System.out.println("Current Position: " + leadScrew.getEncoder().getPosition());
@@ -181,21 +168,12 @@ public class LeadScrewSubsystem extends SubsystemBase {
         return commandedPosition * leadScrewGearboxRatio * leadScrewRevPerInch;
     }
 
-    /**
-     * check status of limit switches to ensure they are correctly enabled
-     */
-    private void checkLimitSwitchState() {
-        // limit switches should always disable the controller in MANUAL mode
-        if (state == LeadScrewStates.MANUAL && leadScrewLimitSwitchKillEnabled) {
-            leadScrewLimitSwitchKillEnabled = false;
-            screwForwardLimit.enableLimitSwitch(false);
-            screwReverseLimit.enableLimitSwitch(false);
-        } else if (state == LeadScrewStates.AUTO && !leadScrewLimitSwitchKillEnabled &&
-                   !screwForwardLimit.isPressed() && !screwReverseLimit.isPressed()) {
-            leadScrewLimitSwitchKillEnabled = true;
-            screwForwardLimit.enableLimitSwitch(true);
-            screwReverseLimit.enableLimitSwitch(true);
-        }
+    private void checkLimitSwitches() {
+        double currentPosition = leadScrew.getEncoder().getPosition();
+        if ((screwReverseLimit.isPressed() && leadScrewTargetPosition < currentPosition - 0.1) ||  // additional factor is to account for imperfect positioning, 
+            (screwForwardLimit.isPressed() && leadScrewTargetPosition > currentPosition + 0.1)) {  // we're only interested in significant differences
+            CommandScheduler.getInstance().schedule(new LeadScrewStopCommand());
+        }  
     }
 
     /**
@@ -218,30 +196,14 @@ public class LeadScrewSubsystem extends SubsystemBase {
                 }
                 break;
             case MANUAL:
-                // if (io.getManipulatorController().get() > leadScrewManualDeadband ||
-                //         io.getManipulatorController().getRightTrigger() > leadScrewManualDeadband) {
-                //     CommandScheduler.getInstance().schedule(new LeadScrewAdjustCommand(
-                //         io.getManipulatorController().getLeftTrigger() - io.getManipulatorController().getRightTrigger()));
-                // } else {
-                //     CommandScheduler.getInstance().schedule(new LeadScrewStopCommand());
-                //     state = LeadScrewStates.AUTO;
-                // }
-                //checkLimitSwitchState();
                 break;
             case AUTO:
-                // if (io.getManipulatorController().getLeftTrigger() > leadScrewManualDeadband ||
-                //         io.getManipulatorController().getRightTrigger() > leadScrewManualDeadband) {
-                //     CommandScheduler.getInstance().schedule(new LeadScrewStopCommand());
-                //     state = LeadScrewStates.MANUAL;
-                // }
-                //checkLimitSwitchState();
-
-                //SmartDashboard.putNumber("Lead Screw Actual Position", leadScrew.getEncoder().getPosition());
-                //SmartDashboard.putNumber("Lead Screw Commanded Position", leadScrewTargetPosition);
-                //leadScrewController.setP(SmartDashboard.getNumber("Lead Screw P value", 0));
-                //leadScrewController.setI(SmartDashboard.getNumber("Lead Screw I value", 0));
-                //leadScrewController.setD(SmartDashboard.getNumber("Lead Screw D value", 0));
-
+                if( !leadScrewLimitSwitchPressed && (screwForwardLimit.isPressed() || screwReverseLimit.isPressed())) {
+                    checkLimitSwitches();
+                    leadScrewLimitSwitchPressed = true;
+                } else if (leadScrewLimitSwitchPressed && !screwForwardLimit.isPressed() && !screwReverseLimit.isPressed()) {
+                    leadScrewLimitSwitchPressed = false;
+                }
                 break;
         }
     }
