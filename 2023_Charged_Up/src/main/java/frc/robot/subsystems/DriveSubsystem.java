@@ -20,7 +20,10 @@ public class DriveSubsystem extends SubsystemBase {
     private double r = 0.0;
     private double l = 0.0;
 
+    public double go;
+
     private final double MAX = 1.0;
+  
 
 
     public DriveSubsystem() {
@@ -48,6 +51,7 @@ public class DriveSubsystem extends SubsystemBase {
         rightFront.set(r);
         leftFront.set(l);
 
+        go = r + l;
 
     }
     public void arcadeDrive(double x, double y){
@@ -70,8 +74,9 @@ public class DriveSubsystem extends SubsystemBase {
             double r = v - s;
 
             move(r, l);
-
     }
+    
+
     @Override 
     public void periodic(){
         double driveScaling = 1.0;

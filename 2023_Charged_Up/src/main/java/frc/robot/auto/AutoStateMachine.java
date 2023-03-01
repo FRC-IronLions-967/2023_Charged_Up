@@ -7,5 +7,6 @@ public enum AutoStateMachine {
     FINISH_ARM,
     SETTLE_ROBOT,
     PLACE_GAME_PIECE,
-    DRIVE;
+    DRIVE,
+    RETRACT_ARM,
 }
