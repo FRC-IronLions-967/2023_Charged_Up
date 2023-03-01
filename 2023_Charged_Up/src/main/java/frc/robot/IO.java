@@ -31,6 +31,8 @@ public void teleopInt(){
     manipulatorController.whenButtonPressed("A", new MoveClawCommand(true));
     manipulatorController.whenButtonReleased("A", new MoveClawCommand(false));
 
+    manipulatorController.whenButtonPressed("X", new MoveClawCommand(true));
+
     manipulatorController.whenButtonPressed("Y", new MoveArmToPositionCommand(ARM_IN, PICKUP_POS));
     manipulatorController.whenButtonPressed("B", new MoveArmToPositionCommand(ARM_IN, STORAGE_POS));
     manipulatorController.whenPOVButtonPressed("N", new MoveArmToPositionCommand(ARM_OUT, PLACE_HIGH_POS));
@@ -41,6 +43,9 @@ public void teleopInt(){
     manipulatorController.whenButtonPressed("RBUMP", new LeadScrewAdjustCommand(0));
     manipulatorController.whenButtonPressed("LBUMP", new LeadScrewAdjustCommand(-0.5));
     manipulatorController.whenButtonPressed("LBUMP", new LeadScrewAdjustCommand(0));
+
+    manipulatorController.whenButtonPressed("SELECT", new LeadScrewInitializeCommand());
+
 }
 public XBoxController getDriverController(){
     return driverController;

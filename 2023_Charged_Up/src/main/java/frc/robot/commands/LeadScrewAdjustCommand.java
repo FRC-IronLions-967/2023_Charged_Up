@@ -13,7 +13,6 @@ public class LeadScrewAdjustCommand extends CommandBase {
     this.speed = speed;
 
     inst = SubsystemsInstance.getInstance();
-    addRequirements(inst.leadScrewSubsystem);
 
   }
 

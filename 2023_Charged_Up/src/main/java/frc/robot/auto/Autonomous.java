@@ -2,7 +2,9 @@ package frc.robot.auto;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.AutoSettleLeadScrew;
 import frc.robot.commands.ClawWaitCommand;
+import frc.robot.commands.LeadScrewInitializeCommand;
 import frc.robot.commands.MoveArmToPositionCommand;
 import frc.robot.commands.MoveClawCommand;
 import frc.robot.commands.RunAutoDriveCommand;
@@ -39,6 +41,8 @@ public class Autonomous implements AutonomousInterface {
             case IDLE:
                 if(autoInit){
                     state = AutoStateMachine.INITIALIZING;
+                    CommandScheduler.getInstance().schedule(new LeadScrewInitializeCommand());
+                    //CommandScheduler.getInstance().schedule(new MoveClawCommand(false));
                 }
                 break;
             case INITIALIZING:
@@ -54,11 +58,17 @@ public class Autonomous implements AutonomousInterface {
             case FINISH_ARM:
                 if (inst.leadScrewSubsystem.isLeadScrewFinished()) {
                     CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(true, 14.3));
+                    state = AutoStateMachine.SETTLE_ROBOT;
+                }
+            break;
+            case SETTLE_ROBOT:
+                if (inst.leadScrewSubsystem.isLeadScrewFinished()) {
+                    CommandScheduler.getInstance().schedule(new AutoSettleLeadScrew(2));
                     state = AutoStateMachine.PLACE_GAME_PIECE;
                 }
             break;
             case PLACE_GAME_PIECE:
-                if (inst.leadScrewSubsystem.isLeadScrewFinished()) {
+                if (inst.leadScrewSubsystem.getAutoSettled()) {
                     CommandScheduler.getInstance().schedule(new MoveClawCommand(true));
                     CommandScheduler.getInstance().schedule(new ClawWaitCommand(1, false));
                     state = AutoStateMachine.DRIVE;

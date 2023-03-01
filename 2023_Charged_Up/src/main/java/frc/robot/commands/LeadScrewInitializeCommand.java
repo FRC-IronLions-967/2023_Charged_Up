@@ -23,6 +23,8 @@ public class LeadScrewInitializeCommand extends CommandBase {
   @Override
   public void execute() {
     inst.leadScrewSubsystem.homeLeadScrew();
+    inst.pnuematicSubsystem.toggleArm(false);
+    inst.pnuematicSubsystem.toggleClaw(false);
   }
 
 

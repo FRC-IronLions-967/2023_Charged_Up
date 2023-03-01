@@ -23,7 +23,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
     private SparkMaxPIDController leadScrewController;
 
     private Boolean leadScrewInitialized;
-    private boolean leadScrewLimitSwitchPressed;
+    private boolean autoLeadScrewSettled;
     private double leadScrewTargetPosition;
     private static LeadScrewStates state;
 
@@ -44,7 +44,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
 
         screwForwardLimit = leadScrew.getForwardLimitSwitch(Type.kNormallyOpen);
         screwReverseLimit = leadScrew.getReverseLimitSwitch(Type.kNormallyOpen);
-        leadScrewLimitSwitchPressed = false;
+        autoLeadScrewSettled = false;
         screwForwardLimit.enableLimitSwitch(false);
         screwReverseLimit.enableLimitSwitch(false);
 
@@ -76,13 +76,11 @@ public class LeadScrewSubsystem extends SubsystemBase {
      * Prepare lead screw to accept commands
      */
     public void initializeLeadScrew() {
-        if (leadScrewInitialized) return;
         leadScrewController.setReference(0.0, ControlType.kDutyCycle);
         leadScrew.getEncoder().setPosition(0.0);
         leadScrewController.setReference(1, ControlType.kPosition);
         leadScrewTargetPosition = 1;
 
-        leadScrewLimitSwitchPressed = false;
         screwForwardLimit.enableLimitSwitch(false);
         screwReverseLimit.enableLimitSwitch(false);
 
@@ -159,6 +157,14 @@ public class LeadScrewSubsystem extends SubsystemBase {
         return state;
     }
 
+    public boolean getAutoSettled() {
+        return autoLeadScrewSettled;
+    }
+
+    public void setAutoSettled(boolean state) {
+        autoLeadScrewSettled = state;
+    }
+
     /**
      * fallback method if setPositionConversionFactor does not work as expected.  Should be called locally before setting reference positions
      * @param commandedPosition position in inches
@@ -184,7 +190,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
         switch(state) {
             case UNINITIALIZED:
                 if (!leadScrewInitialized) {
-                    CommandScheduler.getInstance().schedule(new LeadScrewInitializeCommand());
+                    //CommandScheduler.getInstance().schedule(new LeadScrewInitializeCommand());
                 } else {
                     state = LeadScrewStates.MANUAL;
                 }

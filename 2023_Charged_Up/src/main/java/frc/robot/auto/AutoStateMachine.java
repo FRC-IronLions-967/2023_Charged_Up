@@ -5,6 +5,7 @@ public enum AutoStateMachine {
     INITIALIZING,
     LEAD_SCREW_OUT,
     FINISH_ARM,
+    SETTLE_ROBOT,
     PLACE_GAME_PIECE,
     DRIVE;
 }

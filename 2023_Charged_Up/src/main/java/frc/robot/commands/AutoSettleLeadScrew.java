@@ -3,15 +3,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class ClawWaitCommand extends WaitCommand {
+public class AutoSettleLeadScrew extends WaitCommand {
   
   private SubsystemsInstance inst;
-  private boolean direction;
 
-  public ClawWaitCommand (double seconds, boolean direction) {
+  public AutoSettleLeadScrew (double seconds) {
     super(seconds);
     // Use addRequirements() here to declare subsystem dependencies.
-    this.direction = direction;
 
     inst = SubsystemsInstance.getInstance();
 
@@ -20,7 +18,7 @@ public class ClawWaitCommand extends WaitCommand {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    inst.pnuematicSubsystem.toggleClaw(direction); 
+  public void end(boolean interrupted) { 
+    inst.leadScrewSubsystem.setAutoSettled(true);
   }
 }
