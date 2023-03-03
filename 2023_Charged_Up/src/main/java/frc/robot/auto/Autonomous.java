@@ -77,7 +77,6 @@ public class Autonomous implements AutonomousInterface {
             case DRIVE:
             if(!inst.pnuematicSubsystem.getClawPosition()) {
                 CommandScheduler.getInstance().schedule(new RunAutoDriveCommand(1, -1, -1));
-                CommandScheduler.getInstance().schedule(new RunAutoDriveCommand(0, 0, 0));
                 state = AutoStateMachine.RETRACT_ARM;
             }
                 break;
