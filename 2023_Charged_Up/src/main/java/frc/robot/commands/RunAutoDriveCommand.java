@@ -15,17 +15,11 @@ public class RunAutoDriveCommand extends WaitCommand {
   public RunAutoDriveCommand (double seconds, double leftSpeed, double rightSpeed ) {
     super(seconds);
     // Use addRequirements() here to declare subsystem dependencies.
-    this.direction = direction;
     this.leftSpeed = leftSpeed;
     this.rightSpeed = rightSpeed;
 
     inst = SubsystemsInstance.getInstance();
 
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,12 +32,7 @@ public class RunAutoDriveCommand extends WaitCommand {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    super.end(interrupted);
     inst.driveSubsystem.move(0, 0);
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return true;
   }
 }

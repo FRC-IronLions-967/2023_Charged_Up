@@ -32,7 +32,7 @@ public class Autonomous implements AutonomousInterface {
     public void init() {
         // TODO Auto-generated method stub
         autoInit = true;
-        state = AutoStateMachine.INITIALIZING;
+        state = AutoStateMachine.IDLE;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class Autonomous implements AutonomousInterface {
             case PLACE_GAME_PIECE:
                 if (inst.leadScrewSubsystem.getAutoSettled()) {
                     CommandScheduler.getInstance().schedule(new MoveClawCommand(true));
-                    CommandScheduler.getInstance().schedule(new ClawWaitCommand(1, false));
+                    CommandScheduler.getInstance().schedule(new ClawWaitCommand(2, false));
                     state = AutoStateMachine.DRIVE;
                 }
                 break;
