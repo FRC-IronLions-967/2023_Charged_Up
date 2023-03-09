@@ -9,4 +9,5 @@ public enum AutoStateMachine {
     PLACE_GAME_PIECE,
     DRIVE,
     RETRACT_ARM,
+    DRIVE_ALL_WAY,
 }
