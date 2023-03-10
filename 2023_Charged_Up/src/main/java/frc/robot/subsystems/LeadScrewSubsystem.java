@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.IO;
@@ -53,9 +54,9 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrew.setClosedLoopRampRate(0.5);
 
         leadScrewController = leadScrew.getPIDController();
-        leadScrewController.setP(1.5);  //needs tuning
+        leadScrewController.setP(1.0);  //needs tuning
         leadScrewController.setI(0);
-        leadScrewController.setD(.5);
+        leadScrewController.setD(2.0);
         leadScrewController.setReference(0, ControlType.kPosition);
         leadScrewController.setPositionPIDWrappingEnabled(false);
 
@@ -69,7 +70,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
      * Home lead screw, must be called before use
      */
     public void homeLeadScrew() {
-        leadScrewController.setReference(-0.5, ControlType.kDutyCycle);
+        leadScrewController.setReference(-0.4, ControlType.kDutyCycle);
         state = LeadScrewStates.INITIALIZING;
     }
     /**
@@ -207,5 +208,8 @@ public class LeadScrewSubsystem extends SubsystemBase {
                 checkLimitSwitches();
                 break;
         }
+
+        SmartDashboard.putBoolean("Foward Limit", screwForwardLimit.isPressed());
+        SmartDashboard.putBoolean("Reverse Limit", screwReverseLimit.isPressed());
     }
 }

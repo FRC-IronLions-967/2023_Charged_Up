@@ -46,6 +46,11 @@ public void teleopInt(){
 
     manipulatorController.whenButtonPressed("SELECT", new LeadScrewInitializeCommand());
 
+
+
+    driverController.whenButtonPressed("B", new DriveBrakeCommand(true));
+    driverController.whenButtonPressed("A", new DriveBrakeCommand(false));
+
 }
 public XBoxController getDriverController(){
     return driverController;

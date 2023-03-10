@@ -1,8 +1,8 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.IO;
@@ -23,6 +23,8 @@ public class DriveSubsystem extends SubsystemBase {
     public double go;
 
     private final double MAX = 1.0;
+
+    private String idleMode = "Coast";
   
 
 
@@ -40,7 +42,6 @@ public class DriveSubsystem extends SubsystemBase {
         leftBack.setInverted(false);
 
         io = IO.getInstance();
-
     }
     public void move(double r, double l) {
         r = (r > MAX) ? MAX : r;
@@ -76,6 +77,23 @@ public class DriveSubsystem extends SubsystemBase {
             move(r, l);
     }
     
+    public void brakeMotors(){
+        rightBack.setIdleMode(IdleMode.kBrake);
+        leftBack.setIdleMode(IdleMode.kBrake);
+        rightFront.setIdleMode(IdleMode.kBrake);
+        leftFront.setIdleMode(IdleMode.kBrake);
+
+        idleMode = "Brake";
+    }
+
+    public void coastMotors(){
+        rightBack.setIdleMode(IdleMode.kCoast);
+        leftBack.setIdleMode(IdleMode.kCoast);
+        rightFront.setIdleMode(IdleMode.kCoast);
+        leftFront.setIdleMode(IdleMode.kCoast);
+
+        idleMode = "Coast";
+    }
 
     @Override 
     public void periodic(){
@@ -85,7 +103,9 @@ public class DriveSubsystem extends SubsystemBase {
         }
         double y = -driveScaling * io.getDriverController().getLeftStickY();
         double x = driveScaling * io.getDriverController().getRightStickX();
-        arcadeDrive(x, y);
+        arcadeDrive(x, y);  
+    
+        SmartDashboard.putString("Brakes/Coast", idleMode);
     }
 
 }
