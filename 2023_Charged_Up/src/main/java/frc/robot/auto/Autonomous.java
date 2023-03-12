@@ -76,7 +76,7 @@ public class Autonomous implements AutonomousInterface {
                 break;
             case DRIVE:
             if(!inst.pnuematicSubsystem.getClawPosition()) {
-                CommandScheduler.getInstance().schedule(new RunAutoDriveCommand(0.5, -0.5, -0.5));
+                CommandScheduler.getInstance().schedule(new RunAutoDriveCommand(1.1, -0.5, -0.5));
                 state = AutoStateMachine.RETRACT_ARM;
             }
                 break;
@@ -85,10 +85,6 @@ public class Autonomous implements AutonomousInterface {
                 CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(false, 3.0));
             }
                 break;
-            case DRIVE_ALL_WAY:
-            if(inst.leadScrewSubsystem.isLeadScrewFinished()) {
-                CommandScheduler.getInstance().schedule(new RunAutoDriveCommand(2, -1, -1));
-            }
             default:
                 break;
         }

@@ -10,11 +10,11 @@ public class IO {
 
     private boolean ARM_IN = false;
     private boolean ARM_OUT = true;
-    private double PICKUP_POS = 10.7;
+    private double PICKUP_POS = 10.5;
     private double STORAGE_POS = 3.0;
-    private double PLACE_HIGH_POS = 14.15;
-    private double PLACE_MIDDLE_POS = 13.1;
-    private double PLACE_LOW_POS = 7.0;
+    private double PLACE_HIGH_POS = 14.25;
+    private double PLACE_MIDDLE_POS = 12.9;
+    private double PLACE_LOW_POS = 6.0;
     private double START_POS = 1;
 
     private IO() {
@@ -37,12 +37,10 @@ public void teleopInt(){
     manipulatorController.whenButtonPressed("B", new MoveArmToPositionCommand(ARM_IN, STORAGE_POS));
     manipulatorController.whenPOVButtonPressed("N", new MoveArmToPositionCommand(ARM_OUT, PLACE_HIGH_POS));
     manipulatorController.whenPOVButtonPressed("E", new MoveArmToPositionCommand(ARM_IN, START_POS));
-    manipulatorController.whenPOVButtonPressed("S", new MoveArmToPositionCommand(ARM_OUT, PLACE_LOW_POS));
+    manipulatorController.whenPOVButtonPressed("S", new MoveArmToPositionCommand(ARM_IN, PLACE_LOW_POS));
     manipulatorController.whenPOVButtonPressed("W", new MoveArmToPositionCommand(ARM_OUT, PLACE_MIDDLE_POS));
     manipulatorController.whenButtonPressed("RBUMP", new LeadScrewAdjustCommand(0.5));
-    manipulatorController.whenButtonPressed("RBUMP", new LeadScrewAdjustCommand(0));
     manipulatorController.whenButtonPressed("LBUMP", new LeadScrewAdjustCommand(-0.5));
-    manipulatorController.whenButtonPressed("LBUMP", new LeadScrewAdjustCommand(0));
 
     manipulatorController.whenButtonPressed("SELECT", new LeadScrewInitializeCommand());
 

@@ -36,6 +36,9 @@ public class LeadScrewSubsystem extends SubsystemBase {
     private double leadScrewRevPerInch = mmPerInch / leadScrewPitch; //3.175 revolution for 1 inch approx.
     private double leadScrewGearboxRatio = 5.0; //modify as hardware changes, current ratio is 9:1
 
+    // private double pAmount;
+    // private double dAmount;
+
     public LeadScrewSubsystem() {
         leadScrew = new CANSparkMax(5, MotorType.kBrushless);
         leadScrew.clearFaults();
@@ -56,7 +59,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrewController = leadScrew.getPIDController();
         leadScrewController.setP(1.0);  //needs tuning
         leadScrewController.setI(0);
-        leadScrewController.setD(2.0);
+        leadScrewController.setD(3.0);
         leadScrewController.setReference(0, ControlType.kPosition);
         leadScrewController.setPositionPIDWrappingEnabled(false);
 
@@ -96,12 +99,8 @@ public class LeadScrewSubsystem extends SubsystemBase {
      */
     public void runMotor(double speed) {
         if (state != LeadScrewStates.UNINITIALIZED && state != LeadScrewStates.INITIALIZING) {
-            state = LeadScrewStates.MANUAL;
-            if((screwForwardLimit.isPressed() && speed >= 0.0) ||
-               (screwReverseLimit.isPressed() && speed <= 0.0)) {
-                speed = 0.0;
-            }
-            leadScrewController.setReference(speed, ControlType.kDutyCycle);
+            double currentPosition = leadScrew.getEncoder().getPosition();
+            leadScrewController.setReference(currentPosition + speed, ControlType.kPosition);
         }
     }
 
@@ -211,5 +210,6 @@ public class LeadScrewSubsystem extends SubsystemBase {
 
         SmartDashboard.putBoolean("Foward Limit", screwForwardLimit.isPressed());
         SmartDashboard.putBoolean("Reverse Limit", screwReverseLimit.isPressed());
+        // SmartDashboard.getNumber("difV", dAmount); 
     }
 }

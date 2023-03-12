@@ -1,8 +1,13 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.IO;
@@ -25,8 +30,11 @@ public class DriveSubsystem extends SubsystemBase {
     private final double MAX = 1.0;
 
     private String idleMode = "Coast";
-  
 
+    private SparkMaxPIDController rightFrontController;
+    private SparkMaxPIDController leftFrontController;
+  
+    private double maxRPM = 5700;
 
     public DriveSubsystem() {
         rightFront = new CANSparkMax(1, MotorType.kBrushless);
@@ -34,8 +42,29 @@ public class DriveSubsystem extends SubsystemBase {
         rightBack = new CANSparkMax(2, MotorType.kBrushless);
         leftBack = new CANSparkMax(3, MotorType.kBrushless);
 
+
+
         rightBack.follow(rightFront);
         leftBack.follow(leftFront);
+
+        rightFrontController = rightFront.getPIDController();
+        rightFrontController.setP(3e-4);  //needs tuning
+        rightFrontController.setI(0);
+        rightFrontController.setD(0);
+        rightFrontController.setFF(0.000015);
+        rightFrontController.setReference(0, ControlType.kVelocity);
+        rightFrontController.setOutputRange(-1, 1);
+        rightFront.setClosedLoopRampRate(0.35);
+
+        leftFrontController = leftFront.getPIDController();
+        leftFrontController.setP(3e-4);  //needs tuning
+        leftFrontController.setI(0);
+        leftFrontController.setD(0);
+        leftFrontController.setFF(0.000015);
+        leftFrontController.setReference(0, ControlType.kVelocity);
+        leftFrontController.setOutputRange(-1, 1);
+        leftFront.setClosedLoopRampRate(0.35);
+
         rightFront.setInverted(true);
         rightBack.setInverted(true);
         leftFront.setInverted(false);
@@ -49,6 +78,8 @@ public class DriveSubsystem extends SubsystemBase {
         l = (l > MAX) ? MAX : l;
         l = (l < -(MAX)) ? -(MAX) : l;
 
+        // rightFrontController.setReference(r * maxRPM, ControlType.kVelocity);
+        // leftFrontController.setReference(l * maxRPM, ControlType.kVelocity);
         rightFront.set(r);
         leftFront.set(l);
 
@@ -83,7 +114,7 @@ public class DriveSubsystem extends SubsystemBase {
         rightFront.setIdleMode(IdleMode.kBrake);
         leftFront.setIdleMode(IdleMode.kBrake);
 
-        idleMode = "Brake";
+        idleMode = "BRAKE";
     }
 
     public void coastMotors(){
@@ -92,7 +123,7 @@ public class DriveSubsystem extends SubsystemBase {
         rightFront.setIdleMode(IdleMode.kCoast);
         leftFront.setIdleMode(IdleMode.kCoast);
 
-        idleMode = "Coast";
+        idleMode = "COAST";
     }
 
     @Override 
