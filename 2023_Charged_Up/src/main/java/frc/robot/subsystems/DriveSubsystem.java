@@ -19,6 +19,12 @@ public class DriveSubsystem extends SubsystemBase {
     private CANSparkMax rightBack;
     private CANSparkMax leftBack;
 
+    private double driveP = 3e-4;
+    private double driveI = 0;
+    private double driveD = 0;
+    private double driveFF = 0.000015;
+    private double driveRampRate = 0.35;
+
     private IO io;
 
     private double v = 0.0;
@@ -48,22 +54,22 @@ public class DriveSubsystem extends SubsystemBase {
         leftBack.follow(leftFront);
 
         rightFrontController = rightFront.getPIDController();
-        rightFrontController.setP(3e-4);  //needs tuning
-        rightFrontController.setI(0);
-        rightFrontController.setD(0);
-        rightFrontController.setFF(0.000015);
+        rightFrontController.setP(driveP);  //needs tuning
+        rightFrontController.setI(driveI);
+        rightFrontController.setD(driveD);
+        rightFrontController.setFF(driveFF);
         rightFrontController.setReference(0, ControlType.kVelocity);
         rightFrontController.setOutputRange(-1, 1);
-        rightFront.setClosedLoopRampRate(0.35);
+        rightFront.setClosedLoopRampRate(driveRampRate);
 
         leftFrontController = leftFront.getPIDController();
-        leftFrontController.setP(3e-4);  //needs tuning
-        leftFrontController.setI(0);
-        leftFrontController.setD(0);
-        leftFrontController.setFF(0.000015);
+        leftFrontController.setP(driveP);  //needs tuning
+        leftFrontController.setI(driveI);
+        leftFrontController.setD(driveD);
+        leftFrontController.setFF(driveFF);
         leftFrontController.setReference(0, ControlType.kVelocity);
         leftFrontController.setOutputRange(-1, 1);
-        leftFront.setClosedLoopRampRate(0.35);
+        leftFront.setClosedLoopRampRate(driveRampRate);
 
         rightFront.setInverted(true);
         rightBack.setInverted(true);
@@ -78,8 +84,8 @@ public class DriveSubsystem extends SubsystemBase {
         l = (l > MAX) ? MAX : l;
         l = (l < -(MAX)) ? -(MAX) : l;
 
-        // rightFrontController.setReference(r * maxRPM, ControlType.kVelocity);
-        // leftFrontController.setReference(l * maxRPM, ControlType.kVelocity);
+        rightFrontController.setReference(r * maxRPM, ControlType.kVelocity);
+        leftFrontController.setReference(l * maxRPM, ControlType.kVelocity);
         rightFront.set(r);
         leftFront.set(l);
 
