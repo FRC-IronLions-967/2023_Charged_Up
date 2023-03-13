@@ -23,7 +23,8 @@ import frc.robot.commands.*;
 public class Robot extends TimedRobot {
   private static final String kSingleCubeAuto = "Single Piece Auto";
   private static final String kCubeLeavingAuto = "Cube and Exit Community Auto";
-  private static final String kEngagedAuto = "Auto Balancing Autonomous";
+  private static final String kEngagedAuto = "Auto Balancing Auto";
+  private static final String kDoNothingAuto = "Does Nothing Auto";
   private String autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private SubsystemsInstance subsystemsInst;
@@ -38,6 +39,7 @@ public class Robot extends TimedRobot {
     m_chooser.addOption(kSingleCubeAuto, kSingleCubeAuto);
     m_chooser.setDefaultOption(kCubeLeavingAuto, kCubeLeavingAuto);
     m_chooser.addOption(kEngagedAuto, kEngagedAuto);
+    m_chooser.addOption(kDoNothingAuto, kDoNothingAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
     SmartDashboard.putNumber("maxAccel", 0.02d);
     SmartDashboard.putNumber("scale", 0.5d);
