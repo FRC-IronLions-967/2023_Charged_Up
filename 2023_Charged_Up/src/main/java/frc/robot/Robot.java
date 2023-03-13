@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auto.*;
+import frc.robot.auto.choices.AutoBalancing;
 import frc.robot.auto.choices.CubeLeavingAuto;
 import frc.robot.auto.choices.DoNothingAuto;
 import frc.robot.auto.choices.SingleCubeAuto;
@@ -33,6 +34,7 @@ public class Robot extends TimedRobot {
   private CubeLeavingAuto cubeLeavingAuto;
   private SingleCubeAuto singleCubeAuto;
   private DoNothingAuto doNothingAuto;
+  private AutoBalancing autoBalancing;
 
 
   /**
@@ -90,7 +92,8 @@ public class Robot extends TimedRobot {
       doNothingAuto = new DoNothingAuto();
       doNothingAuto.init();
     }else if(autoSelected == kEngagedAuto) {
-      //put auto balence in here!
+      autoBalancing = new AutoBalancing();
+      autoBalancing.init();
     }else if(autoSelected == kSingleCubeAuto) {
       singleCubeAuto = new SingleCubeAuto();
       singleCubeAuto.init();
@@ -105,7 +108,8 @@ public class Robot extends TimedRobot {
     }else if(autoSelected == kDoNothingAuto) {
       doNothingAuto.periodic();
     }else if(autoSelected == kEngagedAuto) {
-      //put auto balence in here!
+      autoBalancing = new AutoBalancing();
+      autoBalancing.periodic();
     }else if(autoSelected == kSingleCubeAuto) {
       singleCubeAuto.periodic();
     }
