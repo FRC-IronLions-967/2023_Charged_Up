@@ -7,6 +7,7 @@ public class RunAutobalancingCommand extends CommandBase {
   
   private SubsystemsInstance inst;
   private boolean autoBal;
+  //delete this comment asap
 
   public RunAutobalancingCommand(boolean autoBal) {
     // Use addRequirements() here to declare subsystem dependencies.
