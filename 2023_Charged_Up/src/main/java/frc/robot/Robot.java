@@ -21,12 +21,13 @@ import frc.robot.commands.*;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
+  private static final String kSingleCubeAuto = "Single Piece Auto";
+  private static final String kCubeLeavingAuto = "Cube and Exit Community Auto";
+  private static final String kEngagedAuto = "Auto Balancing Autonomous";
   private String autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private SubsystemsInstance subsystemsInst;
-  private Autonomous auto;
+  // private Autonomous auto;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -34,8 +35,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
+    m_chooser.addOption(kSingleCubeAuto, kSingleCubeAuto);
+    m_chooser.setDefaultOption(kCubeLeavingAuto, kCubeLeavingAuto);
+    m_chooser.addOption(kEngagedAuto, kEngagedAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
     SmartDashboard.putNumber("maxAccel", 0.02d);
     SmartDashboard.putNumber("scale", 0.5d);
@@ -71,16 +73,16 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     autoSelected = m_chooser.getSelected();
-    autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+    autoSelected = SmartDashboard.getString("Auto Selector", kCubeLeavingAuto);
     System.out.println("Auto selected: " + autoSelected);
-    auto = new Autonomous();
-    auto.init();
+    // auto = new Autonomous();
+    // auto.init();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    auto.periodic();
+    // auto.periodic();
   }
 
   /** This function is called once when teleop is enabled. */

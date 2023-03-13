@@ -1,7 +1,9 @@
-package frc.robot.auto;
+package frc.robot.auto.choices;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.auto.AutoStateMachine;
+import frc.robot.auto.AutonomousInterface;
 import frc.robot.commands.AutoSettleLeadScrew;
 import frc.robot.commands.ClawWaitCommand;
 import frc.robot.commands.LeadScrewInitializeCommand;
@@ -12,7 +14,7 @@ import frc.robot.subsystems.LeadScrewStates;
 import frc.robot.subsystems.LeadScrewSubsystem;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class Autonomous implements AutonomousInterface {
+public class CubeLeavingAuto implements AutonomousInterface {
 
     private static AutoStateMachine state = AutoStateMachine.IDLE;
     private boolean autoInit;
@@ -20,7 +22,7 @@ public class Autonomous implements AutonomousInterface {
     
   
 
-    public Autonomous(){
+    public CubeLeavingAuto(){
         inst = SubsystemsInstance.getInstance();
     }
 
@@ -96,4 +98,4 @@ public class Autonomous implements AutonomousInterface {
 //2. arm pneumatics out, rest of leadScrew 
 //3. open claw
 //4. Drive Back, arm pneumatics in, leadScrew to storage position 
-//5. 
+//5. Spin!
