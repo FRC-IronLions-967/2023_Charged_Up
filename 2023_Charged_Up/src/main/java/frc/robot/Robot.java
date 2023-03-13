@@ -95,19 +95,20 @@ public class Robot extends TimedRobot {
       singleCubeAuto = new SingleCubeAuto();
       singleCubeAuto.init();
     }
-    
-    
-    
-    
-    
-    // auto = new Autonomous();
-    // auto.init();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    // auto.periodic();
+    if (autoSelected == kCubeLeavingAuto){
+      cubeLeavingAuto.periodic();
+    }else if(autoSelected == kDoNothingAuto) {
+      doNothingAuto.periodic();
+    }else if(autoSelected == kEngagedAuto) {
+      //put auto balence in here!
+    }else if(autoSelected == kSingleCubeAuto) {
+      singleCubeAuto.periodic();
+    }
   }
 
   /** This function is called once when teleop is enabled. */
