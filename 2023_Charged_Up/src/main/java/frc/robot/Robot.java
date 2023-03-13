@@ -82,8 +82,18 @@ public class Robot extends TimedRobot {
     autoSelected = m_chooser.getSelected();
     autoSelected = SmartDashboard.getString("Auto Selector", kCubeLeavingAuto);
     System.out.println("Auto selected: " + autoSelected);
-    if(m_chooser){
-      
+    
+    if (autoSelected == kCubeLeavingAuto){
+      cubeLeavingAuto = new CubeLeavingAuto();
+      cubeLeavingAuto.init();
+    }else if(autoSelected == kDoNothingAuto) {
+      doNothingAuto = new DoNothingAuto();
+      doNothingAuto.init();
+    }else if(autoSelected == kEngagedAuto) {
+      //put auto balence in here!
+    }else if(autoSelected == kSingleCubeAuto) {
+      singleCubeAuto = new SingleCubeAuto();
+      singleCubeAuto.init();
     }
     
     
