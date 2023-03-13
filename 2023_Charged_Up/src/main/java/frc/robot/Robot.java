@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auto.*;
-
+import frc.robot.auto.choices.CubeLeavingAuto;
+import frc.robot.auto.choices.DoNothingAuto;
+import frc.robot.auto.choices.SingleCubeAuto;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 
@@ -28,7 +30,10 @@ public class Robot extends TimedRobot {
   private String autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private SubsystemsInstance subsystemsInst;
-  // private Autonomous auto;
+  private CubeLeavingAuto cubeLeavingAuto;
+  private SingleCubeAuto singleCubeAuto;
+  private DoNothingAuto doNothingAuto;
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -77,6 +82,14 @@ public class Robot extends TimedRobot {
     autoSelected = m_chooser.getSelected();
     autoSelected = SmartDashboard.getString("Auto Selector", kCubeLeavingAuto);
     System.out.println("Auto selected: " + autoSelected);
+    if(m_chooser){
+      
+    }
+    
+    
+    
+    
+    
     // auto = new Autonomous();
     // auto.init();
   }
