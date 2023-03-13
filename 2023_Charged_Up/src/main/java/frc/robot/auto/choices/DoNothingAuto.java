@@ -59,6 +59,8 @@ public class DoNothingAuto implements AutonomousInterface {
                 break;
             case RETRACT_ARM:
                 break;
+            case SPIN:
+                break;
             default:
                 break;
         }

@@ -85,8 +85,13 @@ public class CubeLeavingAuto implements AutonomousInterface {
             case RETRACT_ARM:
             if(inst.driveSubsystem.go == 0.0) {
                 CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(false, 3.0));
+                state = AutoStateMachine.SPIN;
             }
                 break;
+            case SPIN:
+            if(inst.driveSubsystem.go == 0.0) {
+                CommandScheduler.getInstance().schedule(new RunAutoDriveCommand(0.5, -1, 1));
+            }
             default:
                 break;
         }
