@@ -16,6 +16,9 @@ public class DriveSubsystem extends SubsystemBase {
     private CANSparkMax rightBack;
     private CANSparkMax leftBack;
 
+    private double xAxisRate;
+    private double yAxisRate;
+
     private IO io;
 
     private double v = 0.0;
@@ -29,9 +32,6 @@ public class DriveSubsystem extends SubsystemBase {
     private boolean autoBalanceYMode;
     
     private AHRS ahrs;
-
-    private static final double kOffBalanceAngleThresholdDegrees = 10;
-    private static final double kOonBalanceAngleThresholdDegrees  = 5;
 
     public DriveSubsystem() {
         rightFront = new CANSparkMax(1, MotorType.kBrushless);
@@ -48,7 +48,6 @@ public class DriveSubsystem extends SubsystemBase {
 
         io = IO.getInstance();
 
-        System.out.println("Constructor ran");
         ahrs = new AHRS(SPI.Port.kMXP);
     }
     public void move(double r, double l) {
@@ -85,60 +84,38 @@ public class DriveSubsystem extends SubsystemBase {
 
     }
 
-    public void operatorControl() {
-        // while (operatorControl() /*&& isEnabled() add this for pid controller */) {
+    public void manualAutoBal() {
             System.out.println(true);
-            double xAxisRate            = io.getDriverController().getRightStickX();
-            double yAxisRate            = io.getDriverController().getLeftStickY();
+            xAxisRate            = 0.0;
+            yAxisRate            = 0.0;
             double pitchAngleDegrees    = ahrs.getPitch();
             double rollAngleDegrees     = ahrs.getRoll();
 
-            if ( !autoBalanceXMode && 
-                 (Math.abs(pitchAngleDegrees) >= 
-                  Math.abs(kOffBalanceAngleThresholdDegrees))) {
-                autoBalanceXMode = true;
-            }
-            else if ( autoBalanceXMode && 
-                      (Math.abs(pitchAngleDegrees) <= 
-                       Math.abs(kOonBalanceAngleThresholdDegrees))) {
-                autoBalanceXMode = false;
-            }
-            if ( !autoBalanceYMode && 
-                 (Math.abs(pitchAngleDegrees) >= 
-                  Math.abs(kOffBalanceAngleThresholdDegrees))) {
-                autoBalanceYMode = true;
-            }
-            else if ( autoBalanceYMode && 
-                      (Math.abs(pitchAngleDegrees) <= 
-                       Math.abs(kOonBalanceAngleThresholdDegrees))) {
-                autoBalanceYMode = false;
-            }
-
-            // Control drive system automatically, 
-            // driving in reverse direction of pitch/roll angle,
-            // with a magnitude based upon the angle
-
-            if ( autoBalanceXMode ) {
+            // if ( autoBalanceXMode ) {
                 double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
                 xAxisRate = Math.sin(pitchAngleRadians) * -1;
-            }
-            if ( autoBalanceYMode ) {
+            // }
+            // if ( autoBalanceYMode ) {
                 double rollAngleRadians = rollAngleDegrees * (Math.PI / 180.0);
                 yAxisRate = Math.sin(rollAngleRadians) * -1;
-            }
-            move(xAxisRate, yAxisRate);
-            System.out.println("Autobalancing is being ran");
+            // }
+            // move(xAxisRate, xAxisRate);
+
+              System.out.println("Autobalancing is being ran");
         }
 
 
     @Override 
     public void periodic(){
-        double driveScaling = 1.0;
-        if (io.getDriverController().getRightTrigger() > 0.5 && io.getDriverController().getLeftTrigger() > 0.5) {
-            driveScaling = 0.5;
-        }
-        double y = -driveScaling * io.getDriverController().getLeftStickY();
-        double x = driveScaling * io.getDriverController().getRightStickX();
-        arcadeDrive(x, y);
+        // double driveScaling = 1.0;
+        // if (io.getDriverController().getRightTrigger() > 0.5 && io.getDriverController().getLeftTrigger() > 0.5) {
+        //     driveScaling = 0.5;
+        // }
+        // double y = -driveScaling * io.getDriverController().getLeftStickY();
+        // double x = driveScaling * io.getDriverController().getRightStickX();
+        // arcadeDrive(x, y);
+
+        System.out.println(xAxisRate + " :Xrate - " + yAxisRate +" :Yrate");
+        
     }
 }

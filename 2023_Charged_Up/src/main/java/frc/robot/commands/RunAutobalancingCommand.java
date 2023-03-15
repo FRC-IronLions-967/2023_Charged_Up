@@ -27,7 +27,7 @@ public class RunAutobalancingCommand extends CommandBase {
   @Override
   public void execute() {
     if(autoBal){
-    inst.driveSubsystem.operatorControl();
+    inst.driveSubsystem.manualAutoBal();
     System.out.println("Autobalancing command ran");
   }
   }

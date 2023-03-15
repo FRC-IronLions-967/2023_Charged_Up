@@ -6,11 +6,11 @@ import frc.robot.commands.*;
 
 public class IO { 
     private static IO instance; 
-    private XBoxController driverController;
+    // private XBoxController driverController;
     private XBoxController manipulatorController;
 
     private IO() {
-        driverController = new XBoxController(0);
+        // driverController = new XBoxController(0);
         manipulatorController = new XBoxController(1);
     }
 public static IO getInstance() {
@@ -20,15 +20,15 @@ public static IO getInstance() {
 }
 public void teleopInt(){
 
-    manipulatorController.whenButtonPressed("A", new RunSparkCommand(0.25));
-    manipulatorController.whenButtonReleased("A", new RunSparkCommand(0.0));
+    // manipulatorController.whenButtonPressed("A", new RunSparkCommand(0.25));
+    // manipulatorController.whenButtonReleased("A", new RunSparkCommand(0.0));
     manipulatorController.whenButtonPressed("Y", new RunAutobalancingCommand(true));
-    manipulatorController.whenButtonReleased("Y", new RunAutobalancingCommand(false));
+    manipulatorController.whenButtonPressed("X", new RunAutobalancingCommand(false));
 
 }
-public XBoxController getDriverController(){
-    return driverController;
-}
+// public XBoxController getDriverController(){
+//     // return driverController;
+// }
 public XBoxController getManipulatorController(){
     return manipulatorController;
 
