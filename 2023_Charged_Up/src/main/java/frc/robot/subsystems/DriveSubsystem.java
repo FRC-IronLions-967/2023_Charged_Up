@@ -36,6 +36,9 @@ public class DriveSubsystem extends SubsystemBase {
   
     private double maxRPM = 5700;
 
+    public boolean driveBackFinished;
+
+
     public DriveSubsystem() {
         rightFront = new CANSparkMax(1, MotorType.kBrushless);
         leftFront = new CANSparkMax(4, MotorType.kBrushless);
@@ -71,6 +74,8 @@ public class DriveSubsystem extends SubsystemBase {
         leftBack.setInverted(false);
 
         io = IO.getInstance();
+        driveBackFinished = false;
+        brakeMotors();
     }
     public void move(double r, double l) {
         r = (r > MAX) ? MAX : r;
@@ -92,7 +97,7 @@ public class DriveSubsystem extends SubsystemBase {
         
         double difV = y - v;
         SmartDashboard.putNumber("difV", difV);
-        double maxDifV = SmartDashboard.getNumber("maxAccel", 0.03d);
+        double maxDifV = 0.1; //SmartDashboard.getNumber("maxAccel", 0.1d);
         if (difV > 0){ 
             v += (difV > maxDifV) ? maxDifV : difV;
         } else {

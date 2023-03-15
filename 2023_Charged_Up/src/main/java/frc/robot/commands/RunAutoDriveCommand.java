@@ -34,5 +34,6 @@ public class RunAutoDriveCommand extends WaitCommand {
   public void end(boolean interrupted) {
     super.end(interrupted);
     inst.driveSubsystem.move(0, 0);
+    inst.driveSubsystem.driveBackFinished = true;
   }
 }

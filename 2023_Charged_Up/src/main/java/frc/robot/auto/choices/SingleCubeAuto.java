@@ -78,8 +78,6 @@ public class SingleCubeAuto implements AutonomousInterface {
                 break;
             case DRIVE:
                 break;
-            case RETRACT_ARM:
-                break;
             case SPIN:
                 break;
             default:
