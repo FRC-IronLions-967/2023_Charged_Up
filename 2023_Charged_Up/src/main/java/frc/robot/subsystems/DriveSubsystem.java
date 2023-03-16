@@ -35,9 +35,9 @@ public class DriveSubsystem extends SubsystemBase {
 
     public DriveSubsystem() {
         rightFront = new CANSparkMax(1, MotorType.kBrushless);
-        leftFront = new CANSparkMax(2, MotorType.kBrushless);
-        rightBack = new CANSparkMax(3, MotorType.kBrushless);
-        leftBack = new CANSparkMax(4, MotorType.kBrushless);
+        leftFront = new CANSparkMax(4, MotorType.kBrushless);
+        rightBack = new CANSparkMax(2, MotorType.kBrushless);
+        leftBack = new CANSparkMax(3, MotorType.kBrushless);
 
         rightBack.follow(rightFront);
         leftBack.follow(leftFront);
@@ -99,23 +99,51 @@ public class DriveSubsystem extends SubsystemBase {
                 double rollAngleRadians = rollAngleDegrees * (Math.PI / 180.0);
                 yAxisRate = Math.sin(rollAngleRadians) * -1;
             // }
-            // move(xAxisRate, xAxisRate);
+            
 
-              System.out.println("Autobalancing is being ran");
+            move(-xAxisRate, -xAxisRate);
+            
+        
+            //   System.out.println("Autobalancing is being ran");
         }
 
 
     @Override 
     public void periodic(){
-        // double driveScaling = 1.0;
-        // if (io.getDriverController().getRightTrigger() > 0.5 && io.getDriverController().getLeftTrigger() > 0.5) {
-        //     driveScaling = 0.5;
-        // }
-        // double y = -driveScaling * io.getDriverController().getLeftStickY();
-        // double x = driveScaling * io.getDriverController().getRightStickX();
-        // arcadeDrive(x, y);
+        double driveScaling = 1.0;
+        if (io.getDriverController().getRightTrigger() > 0.5 && io.getDriverController().getLeftTrigger() > 0.5) {
+            driveScaling = 0.5;
+        }
+        double y = -driveScaling * io.getDriverController().getLeftStickY();
+        double x = driveScaling * io.getDriverController().getRightStickX();
+        arcadeDrive(x, y);
+
+
+
+
+
 
         System.out.println(xAxisRate + " :Xrate - " + yAxisRate +" :Yrate");
         
+        System.out.println(true);
+        xAxisRate            = 0.0;
+        yAxisRate            = 0.0;
+        double pitchAngleDegrees    = ahrs.getPitch();
+        double rollAngleDegrees     = ahrs.getRoll();
+
+        // if ( autoBalanceXMode ) {
+            double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
+            xAxisRate = Math.sin(pitchAngleRadians) * -1;
+        // }
+        // if ( autoBalanceYMode ) {
+            double rollAngleRadians = rollAngleDegrees * (Math.PI / 180.0);
+            yAxisRate = Math.sin(rollAngleRadians) * -1;
+        // }
+        
+        
+        move(-xAxisRate / 2, -xAxisRate / 2);
+        
+    
+
     }
 }
