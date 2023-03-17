@@ -42,6 +42,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     private double xAxisRate;
     private AHRS ahrs;
+    private boolean runAutoBal = false;
+    private boolean driveToStation = false;
 
 
     public DriveSubsystem() {
@@ -82,6 +84,7 @@ public class DriveSubsystem extends SubsystemBase {
         driveBackFinished = false;
         driveTimeout = false;
         brakeMotors();
+
 
         ahrs = new AHRS(SPI.Port.kMXP);
     }
@@ -139,27 +142,38 @@ public class DriveSubsystem extends SubsystemBase {
         idleMode = "COAST";
     }
 
-    public boolean checkAngle(){
-        double pitchAngleDegrees    = ahrs.getPitch();
-        double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
-        xAxisRate = Math.sin(pitchAngleRadians) * -1;
-        System.out.println(xAxisRate);
-        return (xAxisRate > 0.2);
-    }
-
-    public void autoBal(){
+    public double checkAngle(){
         xAxisRate            = 0.0;
 
         double pitchAngleDegrees    = ahrs.getPitch();
         double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
         xAxisRate = Math.sin(pitchAngleRadians) * -1;
+
+        // System.out.println(xAxisRate + " xAxisRate");
+        return xAxisRate;
+    }
+
+
+    public void autoBal(){
+
+
+        // double pitchAngleDegrees    = ahrs.getPitch();
+        // double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
+        // xAxisRate = Math.sin(pitchAngleRadians) * -1;
         
-        if(xAxisRate > 0.1){
-        move(-xAxisRate / 2, -xAxisRate / 2);
-        } else if (xAxisRate <= 0.1){
-        move(-xAxisRate / 3, -xAxisRate / 3);
-        }
+        // if(xAxisRate > 0.1){
+        // move(-xAxisRate / 2, -xAxisRate / 2);
+        // } else if (xAxisRate <= 0.1){
+        // move(-xAxisRate / 3, -xAxisRate / 3);
+        // }
+            // driveToStation = false;
+            runAutoBal = true;
+
     
+    }
+
+    public void isDriving(){
+        driveToStation = true;
     }
 
     @Override 
@@ -173,6 +187,39 @@ public class DriveSubsystem extends SubsystemBase {
         arcadeDrive(x, y);  
     
         SmartDashboard.putString("Brakes/Coast", idleMode);
+
+
+        // checkAngle();
+
+        // System.out.println("Running during auto");
+        if(runAutoBal){
+            xAxisRate            = 0.0;
+
+                double pitchAngleDegrees    = ahrs.getPitch();
+                double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
+                xAxisRate = Math.sin(pitchAngleRadians) * -1;
+
+                System.out.println(xAxisRate);
+            if(xAxisRate > 0.1){
+                move(-xAxisRate / 2, -xAxisRate / 2);
+                } else if (xAxisRate <= 0.1){
+                move(-xAxisRate / 3, -xAxisRate / 3);
+                } else if(xAxisRate < 0.01){
+                    move(0.0,0.0);
+                }
+                // System.out.println(true);
+    
+        } else {
+            // System.out.println("not running autoBal");
+            // move(0.0, 0.0);
+        }
+
+        // if(driveToStation){
+        //     move(-0.35, -0.35);
+        // } else{
+            // System.out.println("not driving");
+            // move(0, 0);
+        // }
     }
 
 }

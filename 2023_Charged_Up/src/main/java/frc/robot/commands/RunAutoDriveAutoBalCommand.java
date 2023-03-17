@@ -27,7 +27,8 @@ public class RunAutoDriveAutoBalCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return (inst.driveSubsystem.checkAngle() || inst.driveSubsystem.driveTimeout);
+    return false;
+    // return (inst.driveSubsystem.checkAngle() || inst.driveSubsystem.driveTimeout);
   } 
 
   @Override

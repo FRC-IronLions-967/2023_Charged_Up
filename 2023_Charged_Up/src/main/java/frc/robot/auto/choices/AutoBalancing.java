@@ -101,18 +101,26 @@ public class AutoBalancing implements AutonomousInterface {
                 }
                 break;
             case DRIVE:
-                boolean drive = false;
-                if(inst.driveSubsystem.checkAngle()){
+                if(inst.driveSubsystem.checkAngle() > .2){
                     state = AutoStateMachine.BALANCE;
-                } else if(!inst.driveSubsystem.driveTimeout && !drive){
-                    CommandScheduler.getInstance().schedule(new RunAutoDriveAutoBalCommand(-0.0, -0.0));
-                    drive = true;
                 } else{
-                    state = AutoStateMachine.FINISHED;
+                    inst.driveSubsystem.move(-0.3, -0.3);
+                    state = AutoStateMachine.DRIVE;
                 }
+                // } else if(inst.driveSubsystem.checkAngle() < .2){
+                    // !inst.driveSubsystem.driveTimeout &&
+                    // System.out.println("DRIVING");
+                    // CommandScheduler.getInstance().schedule(new RunAutoDriveAutoBalCommand(-0.2, -0.2));
+                    // drive = true;
+                //     inst.driveSubsystem.isDriving();
+                //     state = AutoStateMachine.DRIVE;
+                // } else{
+                //     state = AutoStateMachine.DRIVE;
+                // }
                 break;
             case BALANCE:
                 inst.driveSubsystem.autoBal();
+                // state = AutoStateMachine.FINISHED;
                 break;
             default:
                 break;
