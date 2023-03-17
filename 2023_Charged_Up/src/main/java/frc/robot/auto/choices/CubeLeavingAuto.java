@@ -35,6 +35,9 @@ public class CubeLeavingAuto implements AutonomousInterface {
     public void init() {
         // TODO Auto-generated method stub
         autoInit = true;
+        inst.leadScrewSubsystem.setAutoSettled(false);
+        inst.pnuematicSubsystem.autoShoulderRetracted = false;
+        inst.driveSubsystem.driveBackFinished = false;
         state = AutoStateMachine.IDLE;
     }
 

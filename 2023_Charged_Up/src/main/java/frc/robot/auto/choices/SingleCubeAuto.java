@@ -35,6 +35,8 @@ public class SingleCubeAuto implements AutonomousInterface {
     public void init() {
         // TODO Auto-generated method stub
         autoInit = true;
+        inst.leadScrewSubsystem.setAutoSettled(false);
+        inst.pnuematicSubsystem.autoShoulderRetracted = false;
         state = AutoStateMachine.IDLE;
     }
 

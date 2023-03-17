@@ -36,6 +36,11 @@ public class AutoBalancing implements AutonomousInterface {
     public void init() {
         // TODO Auto-generated method stub
         autoInit = true;
+
+        inst.driveSubsystem.driveTimeout = false;
+        inst.leadScrewSubsystem.setAutoSettled(false);
+        inst.pnuematicSubsystem.autoShoulderRetracted = false;
+
         state = AutoStateMachine.IDLE;
     }
 
