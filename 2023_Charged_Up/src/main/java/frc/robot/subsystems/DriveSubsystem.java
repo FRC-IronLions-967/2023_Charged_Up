@@ -7,6 +7,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -37,6 +38,9 @@ public class DriveSubsystem extends SubsystemBase {
     private double maxRPM = 5700;
 
     public boolean driveBackFinished;
+
+    private double xAxisRate;
+    private AHRS ahrs;
 
 
     public DriveSubsystem() {
@@ -76,6 +80,8 @@ public class DriveSubsystem extends SubsystemBase {
         io = IO.getInstance();
         driveBackFinished = false;
         brakeMotors();
+
+        ahrs = new AHRS(SPI.Port.kMXP);
     }
     public void move(double r, double l) {
         r = (r > MAX) ? MAX : r;
@@ -129,6 +135,16 @@ public class DriveSubsystem extends SubsystemBase {
         leftFront.setIdleMode(IdleMode.kCoast);
 
         idleMode = "COAST";
+    }
+
+    public void autoBal(){
+        xAxisRate            = 0.0;
+
+        double pitchAngleDegrees    = ahrs.getPitch();
+        double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
+        xAxisRate = Math.sin(pitchAngleRadians) * -1;
+        
+        move(-xAxisRate / 2, -xAxisRate / 2);
     }
 
     @Override 
