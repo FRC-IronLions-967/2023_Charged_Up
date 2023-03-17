@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption(kEngagedAuto, kEngagedAuto);
     m_chooser.addOption(kDoNothingAuto, kDoNothingAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-    SmartDashboard.putNumber("maxAccel", 0.02d);
+    SmartDashboard.putNumber("maxAccel", 0.1d);
     SmartDashboard.putNumber("scale", 0.5d);
     SmartDashboard.putNumber("zeroTurn", 0.5d);
 

@@ -2,13 +2,11 @@ package frc.robot.commands;
 
 import edu.wpi.first.net.WPINetJNI;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.SubsystemsInstance;
 
 public class RunAutoDriveAutoBalCommand extends CommandBase {
   
   private SubsystemsInstance inst;
-  private boolean direction;
   private double leftSpeed;
   private double rightSpeed;
 
@@ -32,6 +30,11 @@ public class RunAutoDriveAutoBalCommand extends CommandBase {
     return (inst.driveSubsystem.checkAngle() || inst.driveSubsystem.driveTimeout);
   } 
 
+  @Override
+  public void end(boolean interrupted){
+    super.end(interrupted);
+    inst.driveSubsystem.move(0, 0);
+  }
 
   // Called once the command ends or is interrupted.
 }
