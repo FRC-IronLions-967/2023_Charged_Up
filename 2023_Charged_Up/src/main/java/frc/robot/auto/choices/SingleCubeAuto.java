@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.auto.AutoStateMachine;
 import frc.robot.auto.AutonomousInterface;
+import frc.robot.commands.ArmWaitCommand;
 import frc.robot.commands.AutoSettleLeadScrew;
 import frc.robot.commands.ClawWaitCommand;
 import frc.robot.commands.LeadScrewInitializeCommand;
@@ -54,7 +55,7 @@ public class SingleCubeAuto implements AutonomousInterface {
                 
                 break;
             case LEAD_SCREW_OUT:
-                CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(false, 11));
+                CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(false, 6));
                 state=AutoStateMachine.FINISH_ARM;
                 break;
             case FINISH_ARM:
@@ -65,14 +66,21 @@ public class SingleCubeAuto implements AutonomousInterface {
             break;
             case SETTLE_ROBOT:
                 if (inst.leadScrewSubsystem.isLeadScrewFinished()) {
-                    CommandScheduler.getInstance().schedule(new AutoSettleLeadScrew(2));
+                    CommandScheduler.getInstance().schedule(new AutoSettleLeadScrew(1));
                     state = AutoStateMachine.PLACE_GAME_PIECE;
                 }
             break;
             case PLACE_GAME_PIECE:
                 if (inst.leadScrewSubsystem.getAutoSettled()) {
                     CommandScheduler.getInstance().schedule(new MoveClawCommand(true));
-                    CommandScheduler.getInstance().schedule(new ClawWaitCommand(2, false));
+                    CommandScheduler.getInstance().schedule(new ClawWaitCommand(1, false));
+                    state = AutoStateMachine.RETRACT_ARM;
+                }
+                break;
+            case RETRACT_ARM:
+                if(!inst.pnuematicSubsystem.getClawPosition()) {
+                    CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(false, 14.0));
+                    CommandScheduler.getInstance().schedule(new ArmWaitCommand(2.0));
                     state = AutoStateMachine.DRIVE;
                 }
                 break;

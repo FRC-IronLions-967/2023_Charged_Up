@@ -38,6 +38,7 @@ public class DriveSubsystem extends SubsystemBase {
     private double maxRPM = 5700;
 
     public boolean driveBackFinished;
+    public boolean driveTimeout;
 
     private double xAxisRate;
     private AHRS ahrs;
@@ -79,6 +80,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         io = IO.getInstance();
         driveBackFinished = false;
+        driveTimeout = false;
         brakeMotors();
 
         ahrs = new AHRS(SPI.Port.kMXP);
@@ -137,6 +139,13 @@ public class DriveSubsystem extends SubsystemBase {
         idleMode = "COAST";
     }
 
+    public boolean checkAngle(){
+        double pitchAngleDegrees    = ahrs.getPitch();
+        double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
+
+        return (Math.sin(pitchAngleRadians) * -1) > 0.2;
+    }
+
     public void autoBal(){
         xAxisRate            = 0.0;
 
@@ -145,6 +154,7 @@ public class DriveSubsystem extends SubsystemBase {
         xAxisRate = Math.sin(pitchAngleRadians) * -1;
         
         move(-xAxisRate / 2, -xAxisRate / 2);
+    
     }
 
     @Override 
