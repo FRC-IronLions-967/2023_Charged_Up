@@ -142,8 +142,9 @@ public class DriveSubsystem extends SubsystemBase {
     public boolean checkAngle(){
         double pitchAngleDegrees    = ahrs.getPitch();
         double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
-
-        return (pitchAngleDegrees > 20);
+        xAxisRate = Math.sin(pitchAngleRadians) * -1;
+        System.out.println(xAxisRate);
+        return (xAxisRate > 0.2);
     }
 
     public void autoBal(){

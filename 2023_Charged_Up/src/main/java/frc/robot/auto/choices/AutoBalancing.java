@@ -20,7 +20,7 @@ import frc.robot.subsystems.SubsystemsInstance;
 
 public class AutoBalancing implements AutonomousInterface {
 
-    private static AutoStateMachine state = AutoStateMachine.IDLE;
+    private static AutoStateMachine state = AutoStateMachine.DRIVE;
     private boolean autoInit;
     private SubsystemsInstance inst; 
     
@@ -43,7 +43,7 @@ public class AutoBalancing implements AutonomousInterface {
         inst.leadScrewSubsystem.setAutoSettled(false);
         inst.pnuematicSubsystem.autoShoulderRetracted = false;
 
-        state = AutoStateMachine.IDLE;
+        state = AutoStateMachine.DRIVE;
     }
 
     @Override
@@ -105,7 +105,7 @@ public class AutoBalancing implements AutonomousInterface {
                 if(inst.driveSubsystem.checkAngle()){
                     state = AutoStateMachine.BALANCE;
                 } else if(!inst.driveSubsystem.driveTimeout && !drive){
-                    CommandScheduler.getInstance().schedule(new RunAutoDriveAutoBalCommand(-0.4, -0.4));
+                    CommandScheduler.getInstance().schedule(new RunAutoDriveAutoBalCommand(-0.0, -0.0));
                     drive = true;
                 } else{
                     state = AutoStateMachine.FINISHED;
