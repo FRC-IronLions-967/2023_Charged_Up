@@ -104,7 +104,8 @@ public class AutoBalancing implements AutonomousInterface {
                 if(inst.driveSubsystem.checkAngle() > .2){
                     state = AutoStateMachine.BALANCE;
                 } else{
-                    inst.driveSubsystem.move(-0.3, -0.3);
+                    System.out.println("DRIVING");
+                    inst.driveSubsystem.isDriving();
                     state = AutoStateMachine.DRIVE;
                 }
                 // } else if(inst.driveSubsystem.checkAngle() < .2){

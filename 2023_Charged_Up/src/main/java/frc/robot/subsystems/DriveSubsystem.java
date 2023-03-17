@@ -166,7 +166,7 @@ public class DriveSubsystem extends SubsystemBase {
         // } else if (xAxisRate <= 0.1){
         // move(-xAxisRate / 3, -xAxisRate / 3);
         // }
-            // driveToStation = false;
+            driveToStation = false;
             runAutoBal = true;
 
     
@@ -209,17 +209,11 @@ public class DriveSubsystem extends SubsystemBase {
                 }
                 // System.out.println(true);
     
-        } else {
-            // System.out.println("not running autoBal");
-            // move(0.0, 0.0);
         }
 
-        // if(driveToStation){
-        //     move(-0.35, -0.35);
-        // } else{
-            // System.out.println("not driving");
-            // move(0, 0);
-        // }
+        if(driveToStation){
+            move(-0.35, -0.35);
+        }
     }
 
 }
