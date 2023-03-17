@@ -41,7 +41,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
 
     public LeadScrewSubsystem() {
         leadScrew = new CANSparkMax(5, MotorType.kBrushless);
-        leadScrew.clearFaults();
+        // leadScrew.clearFaults();
         leadScrew.setInverted(true);
         
         System.out.println("Lead Screw Started");

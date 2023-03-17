@@ -38,7 +38,7 @@ public class CubeLeavingAuto implements AutonomousInterface {
         inst.leadScrewSubsystem.setAutoSettled(false);
         inst.pnuematicSubsystem.autoShoulderRetracted = false;
         inst.driveSubsystem.driveBackFinished = false;
-        state = AutoStateMachine.IDLE;
+        state = AutoStateMachine.DRIVE;
     }
 
     @Override
@@ -88,7 +88,8 @@ public class CubeLeavingAuto implements AutonomousInterface {
                 }
                 break;
             case DRIVE:
-            if(inst.pnuematicSubsystem.autoShoulderRetracted) {
+            // if(inst.pnuematicSubsystem.autoShoulderRetracted) {
+                if(true){
                 CommandScheduler.getInstance().schedule(new RunAutoDriveCommand(1.5, -0.8, -0.8));
                 CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(false, 10.5));
                 state = AutoStateMachine.SPIN;

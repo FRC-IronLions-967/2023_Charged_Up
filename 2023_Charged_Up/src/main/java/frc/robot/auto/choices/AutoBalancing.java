@@ -1,5 +1,6 @@
 package frc.robot.auto.choices;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.auto.AutoStateMachine;
@@ -11,6 +12,7 @@ import frc.robot.commands.DriveTimeOutCommand;
 import frc.robot.commands.LeadScrewInitializeCommand;
 import frc.robot.commands.MoveArmToPositionCommand;
 import frc.robot.commands.MoveClawCommand;
+import frc.robot.commands.RunAutoDriveAutoBalCommand;
 import frc.robot.commands.RunAutoDriveCommand;
 import frc.robot.subsystems.LeadScrewStates;
 import frc.robot.subsystems.LeadScrewSubsystem;
@@ -49,9 +51,9 @@ public class AutoBalancing implements AutonomousInterface {
         switch(state) {
             case IDLE:
                 if(autoInit){
-                    state = AutoStateMachine.INITIALIZING;
-                    CommandScheduler.getInstance().schedule(new LeadScrewInitializeCommand());
-                    CommandScheduler.getInstance().schedule(new MoveClawCommand(false));
+                    state = AutoStateMachine.DRIVE;
+                    // CommandScheduler.getInstance().schedule(new LeadScrewInitializeCommand());
+                    // CommandScheduler.getInstance().schedule(new MoveClawCommand(false));
                 }
                 break;
             case INITIALIZING:
@@ -99,10 +101,12 @@ public class AutoBalancing implements AutonomousInterface {
                 }
                 break;
             case DRIVE:
+                boolean drive = false;
                 if(inst.driveSubsystem.checkAngle()){
                     state = AutoStateMachine.BALANCE;
-                } else if(!inst.driveSubsystem.driveTimeout){
-                    inst.driveSubsystem.move(-0.4, -0.4);
+                } else if(!inst.driveSubsystem.driveTimeout && !drive){
+                    CommandScheduler.getInstance().schedule(new RunAutoDriveAutoBalCommand(-0.4, -0.4));
+                    drive = true;
                 } else{
                     state = AutoStateMachine.FINISHED;
                 }

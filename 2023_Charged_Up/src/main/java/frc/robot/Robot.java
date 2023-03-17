@@ -44,8 +44,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_chooser.addOption(kSingleCubeAuto, kSingleCubeAuto);
-    m_chooser.setDefaultOption(kCubeLeavingAuto, kCubeLeavingAuto);
-    m_chooser.addOption(kEngagedAuto, kEngagedAuto);
+    m_chooser.addOption(kCubeLeavingAuto, kCubeLeavingAuto);
+    m_chooser.setDefaultOption(kEngagedAuto, kEngagedAuto);
     m_chooser.addOption(kDoNothingAuto, kDoNothingAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
     SmartDashboard.putNumber("maxAccel", 0.02d);
@@ -82,7 +82,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     autoSelected = m_chooser.getSelected();
-    autoSelected = SmartDashboard.getString("Auto Selector", kCubeLeavingAuto);
+    //autoSelected = SmartDashboard.getString("Auto Selector", kCubeLeavingAuto);
     System.out.println("Auto selected: " + autoSelected);
     
     if (autoSelected == kCubeLeavingAuto){

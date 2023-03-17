@@ -143,7 +143,7 @@ public class DriveSubsystem extends SubsystemBase {
         double pitchAngleDegrees    = ahrs.getPitch();
         double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
 
-        return (Math.sin(pitchAngleRadians) * -1) > 0.2;
+        return (pitchAngleDegrees > 20);
     }
 
     public void autoBal(){
@@ -153,7 +153,11 @@ public class DriveSubsystem extends SubsystemBase {
         double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
         xAxisRate = Math.sin(pitchAngleRadians) * -1;
         
+        if(xAxisRate > 0.1){
         move(-xAxisRate / 2, -xAxisRate / 2);
+        } else if (xAxisRate <= 0.1){
+        move(-xAxisRate / 3, -xAxisRate / 3);
+        }
     
     }
 
