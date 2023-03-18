@@ -41,6 +41,7 @@ public class DriveSubsystem extends SubsystemBase {
     public boolean driveTimeout;
 
     private double xAxisRate;
+    private boolean navxUpdate;
     private AHRS ahrs;
     private boolean runAutoBal = false;
     private boolean driveToStation = false;
@@ -85,7 +86,7 @@ public class DriveSubsystem extends SubsystemBase {
         driveTimeout = false;
         brakeMotors();
 
-
+        navxUpdate = true;
         ahrs = new AHRS(SPI.Port.kMXP);
     }
     public void move(double r, double l) {
@@ -143,33 +144,45 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public double checkAngle(){
-        xAxisRate            = 0.0;
-
-        double pitchAngleDegrees    = ahrs.getPitch();
-        double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
-        xAxisRate = Math.sin(pitchAngleRadians) * -1;
-
-        // System.out.println(xAxisRate + " xAxisRate");
-        return xAxisRate;
-    }
-
-
-    public void autoBal(){
-
+        // xAxisRate            = 0.0;
 
         // double pitchAngleDegrees    = ahrs.getPitch();
         // double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
         // xAxisRate = Math.sin(pitchAngleRadians) * -1;
-        
-        // if(xAxisRate > 0.1){
-        // move(-xAxisRate / 2, -xAxisRate / 2);
-        // } else if (xAxisRate <= 0.1){
-        // move(-xAxisRate / 3, -xAxisRate / 3);
-        // }
-            driveToStation = false;
-            runAutoBal = true;
 
-    
+        // // System.out.println(xAxisRate + " xAxisRate");
+        return Math.abs(xAxisRate);
+    }
+
+    private void updatePitch(){
+        if (navxUpdate) {
+            double pitchAngleDegrees    = ahrs.getPitch();
+            double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
+            xAxisRate = Math.sin(pitchAngleRadians) * -1;
+        }
+        navxUpdate = !navxUpdate;
+        
+    }
+
+    public void autoBal(){
+        double absXAxisRate = 0.0;
+        absXAxisRate = Math.abs(xAxisRate);
+        if(absXAxisRate > 0.18){
+            move(-xAxisRate / 2, -xAxisRate / 2);
+        } else if (absXAxisRate <= 0.18 && absXAxisRate >= 0.1){
+            move(-xAxisRate / 3, -xAxisRate / 3);
+        } else if (absXAxisRate < 0.1 && absXAxisRate >= 0.025){
+            move(-xAxisRate / 5, -xAxisRate / 5);
+        } else if(absXAxisRate < 0.025){
+            move(0.0,0.0);
+        }
+            // driveToStation = false;
+            // runAutoBal = true;
+    }
+
+    public void teleopReset(){
+        runAutoBal = false;
+        driveToStation = false;
     }
 
     public void isDriving(){
@@ -187,33 +200,37 @@ public class DriveSubsystem extends SubsystemBase {
         arcadeDrive(x, y);  
     
         SmartDashboard.putString("Brakes/Coast", idleMode);
-
+        updatePitch();
 
         // checkAngle();
 
         // System.out.println("Running during auto");
-        if(runAutoBal){
-            xAxisRate            = 0.0;
+        // if(runAutoBal){
+        //     xAxisRate            = 0.0;
+        //     double absXAxisRate = 0.0;
 
-                double pitchAngleDegrees    = ahrs.getPitch();
-                double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
-                xAxisRate = Math.sin(pitchAngleRadians) * -1;
+        //     double pitchAngleDegrees    = ahrs.getPitch();
+        //     double pitchAngleRadians = pitchAngleDegrees * (Math.PI / 180.0);
+        //     xAxisRate = Math.sin(pitchAngleRadians) * -1;
 
-                System.out.println(xAxisRate);
-            if(xAxisRate > 0.1){
-                move(-xAxisRate / 2, -xAxisRate / 2);
-                } else if (xAxisRate <= 0.1){
-                move(-xAxisRate / 3, -xAxisRate / 3);
-                } else if(xAxisRate < 0.01){
-                    move(0.0,0.0);
-                }
-                // System.out.println(true);
+        //     System.out.println(xAxisRate);
+        //     absXAxisRate = Math.abs(xAxisRate);
+        //     if(absXAxisRate > 0.20){
+        //         move(-xAxisRate / 1.5, -xAxisRate / 1.5);
+        //     } else if (absXAxisRate <= 0.20 && absXAxisRate >= 0.1){
+        //         move(-xAxisRate / 3, -xAxisRate / 3);
+        //     } else if (absXAxisRate < 0.1 && absXAxisRate >= 0.025){
+        //         move(-xAxisRate / 5, -xAxisRate / 5);
+        //     } else if(absXAxisRate < 0.025){
+        //         move(0.0,0.0);
+        //     }
+        //     // System.out.println(true);
     
-        }
+        // }
 
-        if(driveToStation){
-            move(-0.35, -0.35);
-        }
+        // if(driveToStation){
+        //     move(-0.35, -0.35);
+        // }
     }
 
 }

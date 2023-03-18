@@ -187,6 +187,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
      */
     @Override
     public void periodic() {
+        // System.out.println(state);
         switch(state) {
             case UNINITIALIZED:
                 if (!leadScrewInitialized) {

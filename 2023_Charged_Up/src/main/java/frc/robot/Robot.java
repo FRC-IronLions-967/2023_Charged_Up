@@ -82,7 +82,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     autoSelected = m_chooser.getSelected();
-    //autoSelected = SmartDashboard.getString("Auto Selector", kCubeLeavingAuto);
+    //autoSelected = SmartDashboard.getString("Auto Selector", kEngagedAuto);
     System.out.println("Auto selected: " + autoSelected);
     
     if (autoSelected == kCubeLeavingAuto){
@@ -94,6 +94,7 @@ public class Robot extends TimedRobot {
     }else if(autoSelected == kEngagedAuto) {
       autoBalancing = new AutoBalancing();
       autoBalancing.init();
+      System.out.println(true);
     }else if(autoSelected == kSingleCubeAuto) {
       singleCubeAuto = new SingleCubeAuto();
       singleCubeAuto.init();
@@ -108,7 +109,6 @@ public class Robot extends TimedRobot {
     }else if(autoSelected == kDoNothingAuto) {
       doNothingAuto.periodic();
     }else if(autoSelected == kEngagedAuto) {
-      autoBalancing = new AutoBalancing();
       autoBalancing.periodic();
     }else if(autoSelected == kSingleCubeAuto) {
       singleCubeAuto.periodic();
@@ -119,6 +119,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     IO.getInstance().teleopInt();
+    CommandScheduler.getInstance().schedule(new DriveTeleopResetCommand());
   }
 
   /** This function is called periodically during operator control. */

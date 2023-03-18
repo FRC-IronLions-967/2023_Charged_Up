@@ -57,7 +57,7 @@ public class SingleCubeAuto implements AutonomousInterface {
                 
                 break;
             case LEAD_SCREW_OUT:
-                CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(false, 6));
+                CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(false, 10));
                 state=AutoStateMachine.FINISH_ARM;
                 break;
             case FINISH_ARM:

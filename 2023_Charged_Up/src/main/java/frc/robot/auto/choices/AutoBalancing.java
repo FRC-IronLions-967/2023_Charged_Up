@@ -12,6 +12,7 @@ import frc.robot.commands.DriveTimeOutCommand;
 import frc.robot.commands.LeadScrewInitializeCommand;
 import frc.robot.commands.MoveArmToPositionCommand;
 import frc.robot.commands.MoveClawCommand;
+import frc.robot.commands.RunAutoBalance;
 import frc.robot.commands.RunAutoDriveAutoBalCommand;
 import frc.robot.commands.RunAutoDriveCommand;
 import frc.robot.subsystems.LeadScrewStates;
@@ -20,7 +21,7 @@ import frc.robot.subsystems.SubsystemsInstance;
 
 public class AutoBalancing implements AutonomousInterface {
 
-    private static AutoStateMachine state = AutoStateMachine.DRIVE;
+    private static AutoStateMachine state = AutoStateMachine.IDLE;
     private boolean autoInit;
     private SubsystemsInstance inst; 
     
@@ -43,7 +44,7 @@ public class AutoBalancing implements AutonomousInterface {
         inst.leadScrewSubsystem.setAutoSettled(false);
         inst.pnuematicSubsystem.autoShoulderRetracted = false;
 
-        state = AutoStateMachine.DRIVE;
+        state = AutoStateMachine.IDLE;
     }
 
     @Override
@@ -51,9 +52,9 @@ public class AutoBalancing implements AutonomousInterface {
         switch(state) {
             case IDLE:
                 if(autoInit){
-                    state = AutoStateMachine.DRIVE;
-                    // CommandScheduler.getInstance().schedule(new LeadScrewInitializeCommand());
-                    // CommandScheduler.getInstance().schedule(new MoveClawCommand(false));
+                    state = AutoStateMachine.INITIALIZING;
+                    CommandScheduler.getInstance().schedule(new LeadScrewInitializeCommand());
+                    CommandScheduler.getInstance().schedule(new MoveClawCommand(false));
                 }
                 break;
             case INITIALIZING:
@@ -63,7 +64,7 @@ public class AutoBalancing implements AutonomousInterface {
                 
                 break;
             case LEAD_SCREW_OUT:
-                CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(false, 6));
+                CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(false, 10));
                 state=AutoStateMachine.FINISH_ARM;
                 break;
             case FINISH_ARM:
@@ -74,7 +75,7 @@ public class AutoBalancing implements AutonomousInterface {
             break;
             case SETTLE_ROBOT:
                 if (inst.leadScrewSubsystem.isLeadScrewFinished()) {
-                    CommandScheduler.getInstance().schedule(new AutoSettleLeadScrew(1));
+                    CommandScheduler.getInstance().schedule(new AutoSettleLeadScrew(0.75));
                     state = AutoStateMachine.PLACE_GAME_PIECE;
                 }
             break;
@@ -88,7 +89,7 @@ public class AutoBalancing implements AutonomousInterface {
             case RETRACT_ARM:
                 if(!inst.pnuematicSubsystem.getClawPosition()) {
                     CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(false, 14.0));
-                    CommandScheduler.getInstance().schedule(new ArmWaitCommand(2.0));
+                    CommandScheduler.getInstance().schedule(new ArmWaitCommand(1.0));
                     state = AutoStateMachine.RETRACT_FINISH;
                 }
                 
@@ -96,7 +97,7 @@ public class AutoBalancing implements AutonomousInterface {
             case RETRACT_FINISH:
                 if(inst.pnuematicSubsystem.autoShoulderRetracted){
                     CommandScheduler.getInstance().schedule(new MoveArmToPositionCommand(false, 10.5));
-                    CommandScheduler.getInstance().schedule(new DriveTimeOutCommand(2.0));
+                    CommandScheduler.getInstance().schedule(new DriveTimeOutCommand(1.5));
                     state = AutoStateMachine.DRIVE;
                 }
                 break;
@@ -104,8 +105,7 @@ public class AutoBalancing implements AutonomousInterface {
                 if(inst.driveSubsystem.checkAngle() > .2){
                     state = AutoStateMachine.BALANCE;
                 } else{
-                    System.out.println("DRIVING");
-                    inst.driveSubsystem.isDriving();
+                    CommandScheduler.getInstance().schedule(new RunAutoDriveAutoBalCommand(-0.5, -0.5));
                     state = AutoStateMachine.DRIVE;
                 }
                 // } else if(inst.driveSubsystem.checkAngle() < .2){
@@ -120,7 +120,7 @@ public class AutoBalancing implements AutonomousInterface {
                 // }
                 break;
             case BALANCE:
-                inst.driveSubsystem.autoBal();
+                CommandScheduler.getInstance().schedule(new RunAutoBalance());
                 // state = AutoStateMachine.FINISHED;
                 break;
             default:
@@ -134,4 +134,4 @@ public class AutoBalancing implements AutonomousInterface {
 //2. arm pneumatics out, rest of leadScrew 
 //3. open claw
 //4. Drive Back, arm pneumatics in, leadScrew to storage position 
-//5. Spin!
+//5. Balance
