@@ -41,7 +41,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
 
     public LeadScrewSubsystem() {
         leadScrew = new CANSparkMax(5, MotorType.kBrushless);
-        leadScrew.clearFaults();
+        // leadScrew.clearFaults();
         leadScrew.setInverted(true);
         
         System.out.println("Lead Screw Started");
@@ -57,7 +57,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrew.setClosedLoopRampRate(0.5);
 
         leadScrewController = leadScrew.getPIDController();
-        leadScrewController.setP(1.0);  //needs tuning
+        leadScrewController.setP(0.7);  //needs tuning
         leadScrewController.setI(0);
         leadScrewController.setD(3.0);
         leadScrewController.setReference(0, ControlType.kPosition);
@@ -73,7 +73,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
      * Home lead screw, must be called before use
      */
     public void homeLeadScrew() {
-        leadScrewController.setReference(-0.4, ControlType.kDutyCycle);
+        leadScrewController.setReference(-0.3, ControlType.kDutyCycle);
         state = LeadScrewStates.INITIALIZING;
     }
     /**
@@ -187,6 +187,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
      */
     @Override
     public void periodic() {
+        // System.out.println(state);
         switch(state) {
             case UNINITIALIZED:
                 if (!leadScrewInitialized) {

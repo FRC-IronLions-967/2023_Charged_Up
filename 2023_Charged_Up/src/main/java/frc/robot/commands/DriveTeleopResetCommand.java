@@ -1,18 +1,20 @@
 package frc.robot.commands;
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SubsystemsInstance;
 
-public class LeadScrewInitializeCommand extends CommandBase {
+public class DriveTeleopResetCommand extends CommandBase {
   
+  private boolean idleMode;
   private SubsystemsInstance inst;
 
-  public LeadScrewInitializeCommand() {
+  public DriveTeleopResetCommand() {
     // Use addRequirements() here to declare subsystem dependencies.
 
     inst = SubsystemsInstance.getInstance();
-    addRequirements(inst.leadScrewSubsystem);
-    System.out.println("Lead screw init");
+
   }
 
   // Called when the command is initially scheduled.
@@ -23,12 +25,9 @@ public class LeadScrewInitializeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("Lead screw executed");
-    inst.leadScrewSubsystem.homeLeadScrew();
-    inst.pnuematicSubsystem.toggleArm(false);
-    inst.pnuematicSubsystem.toggleClaw(false);
-  }
 
+    inst.driveSubsystem.teleopReset();
+  }
 
   // Called once the command ends or is interrupted.
   @Override

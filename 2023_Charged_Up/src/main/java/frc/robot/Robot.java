@@ -9,7 +9,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.auto.*;
-
+import frc.robot.auto.choices.AutoBalancing;
+import frc.robot.auto.choices.CubeLeavingAuto;
+import frc.robot.auto.choices.DoNothingAuto;
+import frc.robot.auto.choices.SingleCubeAuto;
 import frc.robot.subsystems.*;
 import frc.robot.commands.*;
 
@@ -21,12 +24,18 @@ import frc.robot.commands.*;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
+  private static final String kSingleCubeAuto = "Single Piece Auto";
+  private static final String kCubeLeavingAuto = "Cube and Exit Community Auto";
+  private static final String kEngagedAuto = "Auto Balancing Auto";
+  private static final String kDoNothingAuto = "Does Nothing Auto";
   private String autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private SubsystemsInstance subsystemsInst;
-  private Autonomous auto;
+  private CubeLeavingAuto cubeLeavingAuto;
+  private SingleCubeAuto singleCubeAuto;
+  private DoNothingAuto doNothingAuto;
+  private AutoBalancing autoBalancing;
+
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -34,10 +43,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
+    m_chooser.addOption(kSingleCubeAuto, kSingleCubeAuto);
+    m_chooser.addOption(kCubeLeavingAuto, kCubeLeavingAuto);
+    m_chooser.setDefaultOption(kEngagedAuto, kEngagedAuto);
+    m_chooser.addOption(kDoNothingAuto, kDoNothingAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-    SmartDashboard.putNumber("maxAccel", 0.02d);
+    SmartDashboard.putNumber("maxAccel", 0.1d);
     SmartDashboard.putNumber("scale", 0.5d);
     SmartDashboard.putNumber("zeroTurn", 0.5d);
 
@@ -71,22 +82,44 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     autoSelected = m_chooser.getSelected();
-    autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+    //autoSelected = SmartDashboard.getString("Auto Selector", kEngagedAuto);
     System.out.println("Auto selected: " + autoSelected);
-    auto = new Autonomous();
-    auto.init();
+    
+    if (autoSelected == kCubeLeavingAuto){
+      cubeLeavingAuto = new CubeLeavingAuto();
+      cubeLeavingAuto.init();
+    }else if(autoSelected == kDoNothingAuto) {
+      doNothingAuto = new DoNothingAuto();
+      doNothingAuto.init();
+    }else if(autoSelected == kEngagedAuto) {
+      autoBalancing = new AutoBalancing();
+      autoBalancing.init();
+      System.out.println(true);
+    }else if(autoSelected == kSingleCubeAuto) {
+      singleCubeAuto = new SingleCubeAuto();
+      singleCubeAuto.init();
+    }
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    auto.periodic();
+    if (autoSelected == kCubeLeavingAuto){
+      cubeLeavingAuto.periodic();
+    }else if(autoSelected == kDoNothingAuto) {
+      doNothingAuto.periodic();
+    }else if(autoSelected == kEngagedAuto) {
+      autoBalancing.periodic();
+    }else if(autoSelected == kSingleCubeAuto) {
+      singleCubeAuto.periodic();
+    }
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
     IO.getInstance().teleopInt();
+    CommandScheduler.getInstance().schedule(new DriveTeleopResetCommand());
   }
 
   /** This function is called periodically during operator control. */

@@ -18,7 +18,8 @@ public class PnuematicSubsystem extends SubsystemBase {
     //private DoubleSolenoid armSol_2;
     private boolean clawPosition;
 
-    
+
+    public boolean autoShoulderRetracted;
 
     public PnuematicSubsystem() {
         try{
@@ -27,7 +28,7 @@ public class PnuematicSubsystem extends SubsystemBase {
             clawSol = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, 2, 3);
             armSol_1 = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, 0, 1);
             //armSol_2 = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, 1, 6);
-        
+            autoShoulderRetracted = false;
         } catch(Exception e) {
             System.out.println("Unable to created DoubleSolenoid");
         }
