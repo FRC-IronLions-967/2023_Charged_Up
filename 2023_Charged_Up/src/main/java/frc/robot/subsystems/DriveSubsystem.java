@@ -1,12 +1,15 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -57,6 +60,8 @@ public class DriveSubsystem extends SubsystemBase {
 
         rightBack.follow(rightFront);
         leftBack.follow(leftFront);
+        REVPhysicsSim.getInstance().addSparkMax(leftFront, DCMotor.getNEO(1));
+        REVPhysicsSim.getInstance().addSparkMax(rightFront, DCMotor.getNEO(1));
 
         rightFrontController = rightFront.getPIDController();
         rightFrontController.setP(3e-4);  //needs tuning
@@ -231,6 +236,10 @@ public class DriveSubsystem extends SubsystemBase {
         // if(driveToStation){
         //     move(-0.35, -0.35);
         // }
+    }
+    @Override
+    public void simulationPeriodic() {
+        REVPhysicsSim.getInstance().run();
     }
 
 }
