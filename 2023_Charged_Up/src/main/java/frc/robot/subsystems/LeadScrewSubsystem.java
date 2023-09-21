@@ -43,7 +43,6 @@ public class LeadScrewSubsystem extends SubsystemBase {
 
     public LeadScrewSubsystem() {
         leadScrew = new CANSparkMax(5, MotorType.kBrushless);
-        REVPhysicsSim.getInstance().addSparkMax(leadScrew, DCMotor.getNEO(1));
         // leadScrew.clearFaults();
         leadScrew.setInverted(true);
         
@@ -67,7 +66,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrewController.setPositionPIDWrappingEnabled(false);
 
         leadScrewInitialized = false;
-        state = LeadScrewStates.UNINITIALIZED;
+        state = LeadScrewStates.AUTO;
 
         io = IO.getInstance();
     }
@@ -217,8 +216,12 @@ public class LeadScrewSubsystem extends SubsystemBase {
         // SmartDashboard.getNumber("difV", dAmount); 
     }
 
+    public void simulationInit() {
+        REVPhysicsSim.getInstance().addSparkMax(leadScrew, DCMotor.getNEO(1));
+    }
+
     @Override
     public void simulationPeriodic() {
-        REVPhysicsSim.getInstance().run();
+        //REVPhysicsSim.getInstance().run();
     }
 }

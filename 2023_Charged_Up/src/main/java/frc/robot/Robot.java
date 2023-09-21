@@ -146,6 +146,12 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {}
 
   @Override
+  public void simulationInit() {
+    subsystemsInst.driveSubsystem.simulationInit();
+    subsystemsInst.leadScrewSubsystem.simulationInit();
+  }
+
+  @Override
   public void simulationPeriodic(){
     REVPhysicsSim.getInstance().run();
   }

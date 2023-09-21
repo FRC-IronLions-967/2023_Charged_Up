@@ -60,14 +60,13 @@ public class DriveSubsystem extends SubsystemBase {
 
         rightBack.follow(rightFront);
         leftBack.follow(leftFront);
-        REVPhysicsSim.getInstance().addSparkMax(leftFront, DCMotor.getNEO(1));
-        REVPhysicsSim.getInstance().addSparkMax(rightFront, DCMotor.getNEO(1));
+        
 
         rightFrontController = rightFront.getPIDController();
         rightFrontController.setP(3e-4);  //needs tuning
         rightFrontController.setI(0);
         rightFrontController.setD(0);
-        rightFrontController.setFF(0.000015);
+        rightFrontController.setFF(0.00005);
         rightFrontController.setReference(0, ControlType.kVelocity);
         rightFrontController.setOutputRange(-1, 1);
         rightFront.setClosedLoopRampRate(0.35);
@@ -76,7 +75,7 @@ public class DriveSubsystem extends SubsystemBase {
         leftFrontController.setP(3e-4);  //needs tuning
         leftFrontController.setI(0);
         leftFrontController.setD(0);
-        leftFrontController.setFF(0.000015);
+        leftFrontController.setFF(0.00005);
         leftFrontController.setReference(0, ControlType.kVelocity);
         leftFrontController.setOutputRange(-1, 1);
         leftFront.setClosedLoopRampRate(0.35);
@@ -100,10 +99,10 @@ public class DriveSubsystem extends SubsystemBase {
         l = (l > MAX) ? MAX : l;
         l = (l < -(MAX)) ? -(MAX) : l;
 
-        // rightFrontController.setReference(r * maxRPM, ControlType.kVelocity);
-        // leftFrontController.setReference(l * maxRPM, ControlType.kVelocity);
-        rightFront.set(r);
-        leftFront.set(l);
+        rightFrontController.setReference(r * maxRPM, ControlType.kVelocity);
+        leftFrontController.setReference(l * maxRPM, ControlType.kVelocity);
+        //rightFront.set(r);
+        //leftFront.set(l);
 
         go = r + l;
 
@@ -237,9 +236,17 @@ public class DriveSubsystem extends SubsystemBase {
         //     move(-0.35, -0.35);
         // }
     }
+
+    public void simulationInit() {
+        REVPhysicsSim.getInstance().addSparkMax(leftFront, DCMotor.getNEO(1));
+        REVPhysicsSim.getInstance().addSparkMax(rightFront, DCMotor.getNEO(1));
+        REVPhysicsSim.getInstance().addSparkMax(leftBack, DCMotor.getNEO(1));
+        REVPhysicsSim.getInstance().addSparkMax(rightBack, DCMotor.getNEO(1));
+    }
+
     @Override
     public void simulationPeriodic() {
-        REVPhysicsSim.getInstance().run();
+        //REVPhysicsSim.getInstance().run();
     }
 
 }

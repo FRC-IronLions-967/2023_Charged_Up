@@ -28,26 +28,26 @@ public static IO getInstance() {
 }
 public void teleopInt(){
 
-    manipulatorController.whenButtonPressed("A", new MoveClawCommand(true));
-    manipulatorController.whenButtonReleased("A", new MoveClawCommand(false));
+    driverController.whenButtonPressed("A", new MoveClawCommand(true));
+    driverController.whenButtonReleased("A", new MoveClawCommand(false));
 
-    manipulatorController.whenButtonPressed("X", new MoveClawCommand(true));
+    driverController.whenButtonPressed("X", new MoveClawCommand(true));
 
-    manipulatorController.whenButtonPressed("Y", new MoveArmToPositionCommand(ARM_IN, PICKUP_POS));
-    manipulatorController.whenButtonPressed("B", new MoveArmToPositionCommand(ARM_IN, STORAGE_POS));
-    manipulatorController.whenPOVButtonPressed("N", new MoveArmToPositionCommand(ARM_OUT, PLACE_HIGH_POS));
-    manipulatorController.whenPOVButtonPressed("E", new MoveArmToPositionCommand(ARM_IN, START_POS));
-    manipulatorController.whenPOVButtonPressed("S", new MoveArmToPositionCommand(ARM_IN, PLACE_LOW_POS));
-    manipulatorController.whenPOVButtonPressed("W", new MoveArmToPositionCommand(ARM_OUT, PLACE_MIDDLE_POS));
-    manipulatorController.whenButtonPressed("RBUMP", new LeadScrewAdjustCommand(0.5));
-    manipulatorController.whenButtonPressed("LBUMP", new LeadScrewAdjustCommand(-0.5));
+    driverController.whenButtonPressed("Y", new MoveArmToPositionCommand(ARM_IN, PICKUP_POS));
+    driverController.whenButtonPressed("B", new MoveArmToPositionCommand(ARM_IN, STORAGE_POS));
+    driverController.whenPOVButtonPressed("N", new MoveArmToPositionCommand(ARM_OUT, PLACE_HIGH_POS));
+    driverController.whenPOVButtonPressed("E", new MoveArmToPositionCommand(ARM_IN, START_POS));
+    driverController.whenPOVButtonPressed("S", new MoveArmToPositionCommand(ARM_IN, PLACE_LOW_POS));
+    driverController.whenPOVButtonPressed("W", new MoveArmToPositionCommand(ARM_OUT, PLACE_MIDDLE_POS));
+    driverController.whenButtonPressed("RBUMP", new LeadScrewAdjustCommand(0.5));
+    driverController.whenButtonPressed("LBUMP", new LeadScrewAdjustCommand(-0.5));
 
-    manipulatorController.whenButtonPressed("SELECT", new LeadScrewInitializeCommand());
+    driverController.whenButtonPressed("SELECT", new LeadScrewInitializeCommand());
 
 
 
-    driverController.whenButtonPressed("B", new DriveBrakeCommand(true));
-    driverController.whenButtonPressed("A", new DriveBrakeCommand(false));
+    //driverController.whenButtonPressed("B", new DriveBrakeCommand(true));
+    //driverController.whenButtonPressed("A", new DriveBrakeCommand(false));
 
 }
 public XBoxController getDriverController(){
