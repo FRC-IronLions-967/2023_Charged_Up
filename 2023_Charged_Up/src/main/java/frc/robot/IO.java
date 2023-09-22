@@ -31,14 +31,14 @@ public void teleopInt(){
     driverController.whenButtonPressed("A", new MoveClawCommand(true));
     driverController.whenButtonReleased("A", new MoveClawCommand(false));
 
-    driverController.whenButtonPressed("X", new MoveClawCommand(true));
+    // driverController.whenButtonPressed("X", new MoveClawCommand(true));
 
     driverController.whenButtonPressed("Y", new MoveArmToPositionCommand(ARM_IN, PICKUP_POS));
     driverController.whenButtonPressed("B", new MoveArmToPositionCommand(ARM_IN, STORAGE_POS));
     driverController.whenPOVButtonPressed("N", new MoveArmToPositionCommand(ARM_OUT, PLACE_HIGH_POS));
     driverController.whenPOVButtonPressed("E", new MoveArmToPositionCommand(ARM_IN, START_POS));
-    driverController.whenPOVButtonPressed("S", new MoveArmToPositionCommand(ARM_IN, PLACE_LOW_POS));
-    driverController.whenPOVButtonPressed("W", new MoveArmToPositionCommand(ARM_OUT, PLACE_MIDDLE_POS));
+    driverController.whenButtonReleased("X", new GoCommandCommand(true));
+    driverController.whenButtonPressed("X", new GoCommandCommand(false));
     driverController.whenButtonPressed("RBUMP", new LeadScrewAdjustCommand(0.5));
     driverController.whenButtonPressed("LBUMP", new LeadScrewAdjustCommand(-0.5));
 

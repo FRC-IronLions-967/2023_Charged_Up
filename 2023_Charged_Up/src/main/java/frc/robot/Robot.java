@@ -149,6 +149,7 @@ public class Robot extends TimedRobot {
   public void simulationInit() {
     subsystemsInst.driveSubsystem.simulationInit();
     subsystemsInst.leadScrewSubsystem.simulationInit();
+    subsystemsInst.shooterSubsystem.simulationInit();
   }
 
   @Override

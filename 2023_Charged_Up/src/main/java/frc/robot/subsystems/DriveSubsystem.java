@@ -196,9 +196,9 @@ public class DriveSubsystem extends SubsystemBase {
     @Override 
     public void periodic(){
         double driveScaling = 1.0;
-        if (io.getDriverController().getRightTrigger() > 0.0 && io.getDriverController().getLeftTrigger() > 0.0) {
-            driveScaling = 0.5;
-        }
+        // if (io.getDriverController().getRightTrigger() > 0.0 && io.getDriverController().getLeftTrigger() > 0.0) {
+        //     driveScaling = 0.5;
+        // }
         double y = -driveScaling * io.getDriverController().getLeftStickY();
         double x = driveScaling * io.getDriverController().getRightStickX();
         arcadeDrive(x, y);  
