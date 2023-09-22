@@ -6,6 +6,7 @@ public class SubsystemsInstance {
     public DriveSubsystem driveSubsystem;
     public LeadScrewSubsystem leadScrewSubsystem;
     public PnuematicSubsystem pnuematicSubsystem;
+    public ShooterSubsystem shooterSubsystem;
 
     private static SubsystemsInstance inst;
 
@@ -13,10 +14,12 @@ public class SubsystemsInstance {
         driveSubsystem = new DriveSubsystem();
         leadScrewSubsystem = new LeadScrewSubsystem();
         pnuematicSubsystem = new PnuematicSubsystem();
+        shooterSubsystem = new ShooterSubsystem();
 
         CommandScheduler.getInstance().registerSubsystem(driveSubsystem);
         CommandScheduler.getInstance().registerSubsystem(leadScrewSubsystem);
         CommandScheduler.getInstance().registerSubsystem(pnuematicSubsystem);
+        CommandScheduler.getInstance().registerSubsystem(shooterSubsystem);
         
 
     }
