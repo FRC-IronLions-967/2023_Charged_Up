@@ -1,12 +1,14 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -64,7 +66,7 @@ public class LeadScrewSubsystem extends SubsystemBase {
         leadScrewController.setPositionPIDWrappingEnabled(false);
 
         leadScrewInitialized = false;
-        state = LeadScrewStates.UNINITIALIZED;
+        state = LeadScrewStates.AUTO;
 
         io = IO.getInstance();
     }
@@ -212,5 +214,14 @@ public class LeadScrewSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Foward Limit", screwForwardLimit.isPressed());
         SmartDashboard.putBoolean("Reverse Limit", screwReverseLimit.isPressed());
         // SmartDashboard.getNumber("difV", dAmount); 
+    }
+
+    public void simulationInit() {
+        REVPhysicsSim.getInstance().addSparkMax(leadScrew, DCMotor.getNEO(1));
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        //REVPhysicsSim.getInstance().run();
     }
 }

@@ -1,12 +1,15 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -57,12 +60,13 @@ public class DriveSubsystem extends SubsystemBase {
 
         rightBack.follow(rightFront);
         leftBack.follow(leftFront);
+        
 
         rightFrontController = rightFront.getPIDController();
         rightFrontController.setP(3e-4);  //needs tuning
         rightFrontController.setI(0);
         rightFrontController.setD(0);
-        rightFrontController.setFF(0.000015);
+        rightFrontController.setFF(0.00005);
         rightFrontController.setReference(0, ControlType.kVelocity);
         rightFrontController.setOutputRange(-1, 1);
         rightFront.setClosedLoopRampRate(0.35);
@@ -71,7 +75,7 @@ public class DriveSubsystem extends SubsystemBase {
         leftFrontController.setP(3e-4);  //needs tuning
         leftFrontController.setI(0);
         leftFrontController.setD(0);
-        leftFrontController.setFF(0.000015);
+        leftFrontController.setFF(0.00005);
         leftFrontController.setReference(0, ControlType.kVelocity);
         leftFrontController.setOutputRange(-1, 1);
         leftFront.setClosedLoopRampRate(0.35);
@@ -95,10 +99,10 @@ public class DriveSubsystem extends SubsystemBase {
         l = (l > MAX) ? MAX : l;
         l = (l < -(MAX)) ? -(MAX) : l;
 
-        // rightFrontController.setReference(r * maxRPM, ControlType.kVelocity);
-        // leftFrontController.setReference(l * maxRPM, ControlType.kVelocity);
-        rightFront.set(r);
-        leftFront.set(l);
+        rightFrontController.setReference(r * maxRPM, ControlType.kVelocity);
+        leftFrontController.setReference(l * maxRPM, ControlType.kVelocity);
+        //rightFront.set(r);
+        //leftFront.set(l);
 
         go = r + l;
 
@@ -231,6 +235,18 @@ public class DriveSubsystem extends SubsystemBase {
         // if(driveToStation){
         //     move(-0.35, -0.35);
         // }
+    }
+
+    public void simulationInit() {
+        REVPhysicsSim.getInstance().addSparkMax(leftFront, DCMotor.getNEO(1));
+        REVPhysicsSim.getInstance().addSparkMax(rightFront, DCMotor.getNEO(1));
+        REVPhysicsSim.getInstance().addSparkMax(leftBack, DCMotor.getNEO(1));
+        REVPhysicsSim.getInstance().addSparkMax(rightBack, DCMotor.getNEO(1));
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        //REVPhysicsSim.getInstance().run();
     }
 
 }
